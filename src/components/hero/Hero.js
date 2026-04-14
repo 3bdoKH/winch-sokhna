@@ -1,8 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, ShieldCheck, MapPin, Clock } from 'lucide-react';
+import { Phone, ShieldCheck, MapPin, Clock, ChevronLeft } from 'lucide-react';
 import { phoneNumbers } from '../../data/phoneNumbers';
 import './Hero.css';
+
+const galleryImages = [
+  { src: '/images/1.jpeg', alt: 'ونش سحب سيارة' },
+  { src: '/images/2.jpeg', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/3.jpeg', alt: 'نقل سيارة بأمان' },
+  { src: '/images/4.jpeg', alt: 'فريق الإنقاذ في العمل' },
+  { src: '/images/5.jpeg', alt: 'ونش سحب سيارة' },
+  { src: '/images/6.jpeg', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/7.jpeg', alt: 'نقل سيارة بأمان' },
+  { src: '/images/8.jpeg', alt: 'فريق الإنقاذ في العمل' },
+  { src: '/images/9.jpeg', alt: 'ونش سحب سيارة' },
+  { src: '/images/10.jpeg', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/11.jpeg', alt: 'نقل سيارة بأمان' },
+  { src: '/images/12.jpeg', alt: 'فريق الإنقاذ في العمل' },
+];
 
 const Hero = () => {
   const primaryPhone = phoneNumbers[0];
@@ -86,6 +101,25 @@ const Hero = () => {
             <ShieldCheck size={18} />
             <span><strong>أمان تام</strong> لسيارتك</span>
           </div>
+        </div>
+      </div>
+
+      {/* Gallery Strip */}
+      <div className="hero-gallery-strip">
+        <div className="container hero-gallery-inner">
+          <span className="gallery-strip-label">من أعمالنا الميدانية</span>
+          <div className="gallery-strip-imgs">
+            {galleryImages.map((img, i) => (
+              <div key={i} className="gallery-strip-item">
+                <img src={img.src} alt={img.alt} loading="lazy" />
+                <div className="gallery-strip-overlay">{img.alt}</div>
+              </div>
+            ))}
+          </div>
+          <Link to="/about" className="gallery-strip-more">
+            عرض المزيد
+            <ChevronLeft size={16} />
+          </Link>
         </div>
       </div>
     </section>

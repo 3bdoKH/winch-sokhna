@@ -7,13 +7,13 @@ const Stats = () => {
     {
       id: 1,
       icon: <Truck size={36} />,
-      number: '15,000+',
+      number: '5,000+',
       title: 'عملية إنقاذ ناجحة'
     },
     {
       id: 2,
       icon: <Users size={36} />,
-      number: '12,000+',
+      number: '4,000+',
       title: 'عميل سعيد'
     },
     {

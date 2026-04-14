@@ -2,9 +2,18 @@
   padding-bottom: 2rem;
 }
 
-.story-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
+/* ── Story Grid ─────────────────────────────────── */
+.about-story-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .about-story-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .story-content p {
@@ -33,8 +42,293 @@
 
 .mv-title {
   color: var(--secondary);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* ── Story Highlight Cards ──────────────────────── */
+.story-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.highlight-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.highlight-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.highlight-icon {
+  color: var(--primary);
   margin-bottom: 0.5rem;
 }
+
+.highlight-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.highlight-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ── Fleet Gallery ──────────────────────────────── */
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.fleet-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  gap: 0.75rem;
+}
+
+@media (min-width: 600px) {
+  .fleet-photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .fleet-photo-item.featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+.fleet-photo-item {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  cursor: pointer;
+}
+
+.fleet-photo-item.featured {
+  aspect-ratio: auto;
+}
+
+.fleet-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.fleet-photo-item:hover img {
+  transform: scale(1.07);
+}
+
+.fleet-photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fleet-photo-item:hover .fleet-photo-overlay {
+  opacity: 1;
+}
+
+/* ── Timeline ───────────────────────────────────── */
+
+.timeline {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding-right: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+  border-radius: 3px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.timeline-dot {
+  position: absolute;
+  right: -2.6rem;
+  top: 0.4rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid white;
+  box-shadow: 0 0 0 3px var(--primary);
+  flex-shrink: 0;
+}
+
+.timeline-year {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary);
+  min-width: 70px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.timeline-content h4 {
+  font-size: 1.15rem;
+  color: var(--secondary);
+  margin-bottom: 0.4rem;
+}
+
+.timeline-content p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ── Why Us Grid ────────────────────────────────── */
+
+.why-us-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .why-us-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.why-us-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem 1.25rem;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.why-us-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.why-us-icon {
+  color: var(--primary);
+  margin: 0 auto 1rem;
+}
+
+.why-us-card h4 {
+  font-size: 1rem;
+  color: var(--secondary);
+  margin-bottom: 0.5rem;
+}
+
+.why-us-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── CTA Banner ─────────────────────────────────── */
+.about-cta-section {
+  position: relative;
+  padding: 5rem 0;
+  text-align: center;
+  overflow: hidden;
+  color: white;
+}
+
+.about-cta-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.25) saturate(0.4);
+  z-index: 0;
+}
+
+.about-cta-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.about-cta-inner h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.about-cta-inner p {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  margin-bottom: 2.5rem;
+}
+
+.about-cta-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid white;
+  color: white;
+  padding: 0.75rem 1.75rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.btn-outline-white:hover {
+  background-color: white;
+  color: var(--secondary);
+}
+
+/* ── Utilities ──────────────────────────────────── */
+.highlight { color: var(--primary); }
+.mb-5 { margin-bottom: 3rem; }
+.section-title { font-size: 2rem; }

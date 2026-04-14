@@ -33,22 +33,22 @@ const WhatWeOffer = () => {
   return (
     <section className="what-we-offer section">
       <div className="container">
-        
+
         <div className="offer-wrapper">
           <div className="offer-image-side">
             <img src="/images/2.jpeg" alt="ونش انقاذ اثناء العمل" className="offer-img" />
             <div className="experience-badge">
               <span className="years">15+</span>
-              <span className="text-exp">عاماً من<br/>الخبرة</span>
+              <span className="text-exp">عاماً من<br />الخبرة</span>
             </div>
           </div>
-          
+
           <div className="offer-content-side">
             <h2 className="section-title">لماذا تختار <span className="highlight">ونش انقاذ السخنة</span>؟</h2>
             <p className="offer-intro">
-              لسنا مجرد خدمة قطر سيارات، بل نحن شركاؤك على الطريق في أوقات الأزمات. نلتزم بتقديم خدمة تفوق التوقعات لضمان راحتك.
+              لسنا مجرد خدمة سحب سيارات، بل نحن شركاؤك على الطريق في أوقات الأزمات. نلتزم بتقديم خدمة تفوق التوقعات لضمان راحتك.
             </p>
-            
+
             <div className="offer-list">
               {offers.map(offer => (
                 <div key={offer.id} className="offer-item">

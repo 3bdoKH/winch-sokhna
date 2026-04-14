@@ -7,7 +7,6 @@ import './ServiceAreasPreview.css';
 const ServiceAreasPreview = () => {
   // Show only top 8 areas for the preview
   const topAreas = areas.slice(0, 8);
-
   return (
     <section className="service-areas-preview section bg-light">
       <div className="container">
@@ -20,10 +19,10 @@ const ServiceAreasPreview = () => {
 
         <div className="areas-grid">
           {topAreas.map((areaData, index) => (
-            <div key={index} className="area-card-preview">
+            <Link to={`/areas/${areaData.name}`} key={index} className="area-card-preview">
               <MapPin size={24} className="area-icon" />
               <h3 className="area-name">{areaData.name}</h3>
-            </div>
+            </Link>
           ))}
         </div>
 
