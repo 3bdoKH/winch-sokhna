@@ -1,0 +1,98 @@
+.page-header {
+  background-color: var(--secondary);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.page-breadcrumb {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  color: #cbd5e1;
+}
+
+.page-breadcrumb a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.page-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.mb-5 {
+  margin-bottom: 3rem;
+}
+
+.governorates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.governorate-card {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.governorate-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--secondary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.gov-icon {
+  color: var(--primary);
+}
+
+.areas-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .areas-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .areas-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.area-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.area-link:hover {
+  color: var(--primary);
+  background-color: rgba(245, 158, 11, 0.05);
+  transform: translateX(-5px); /* Move left because RTL */
+}

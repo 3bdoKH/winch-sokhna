@@ -1,0 +1,149 @@
+.articles-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+  .articles-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.article-list-card {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.article-list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.article-list-image {
+  display: block;
+  width: 100%;
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--background-alt);
+}
+
+.article-list-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.article-list-image:hover img {
+  transform: scale(1.05);
+}
+
+.article-badge-main {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--secondary);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  z-index: 2;
+}
+
+.article-card-body {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.article-meta-row {
+  margin-bottom: 1.5rem;
+}
+
+.meta-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.meta-info {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.meta-info svg {
+  color: var(--primary);
+}
+
+.article-title-lg {
+  font-size: 1.6rem;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
+}
+
+.article-title-lg a {
+  color: var(--secondary);
+  transition: var(--transition);
+}
+
+.article-title-lg a:hover {
+  color: var(--primary);
+}
+
+.article-excerpt-lg {
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.article-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
+
+.articles-loader, .articles-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.articles-error {
+  color: #ef4444; /* red error */
+}
+
+.read-more-btn {
+  display: inline-flex;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  gap: 0.5rem;
+  align-items: center;
+}

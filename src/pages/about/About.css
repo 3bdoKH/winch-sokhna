@@ -1,0 +1,40 @@
+.basic-story {
+  padding-bottom: 2rem;
+}
+
+.story-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.story-content p {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+
+.mission-vision {
+  margin-top: 2rem;
+  background-color: var(--background-alt);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  border-right: 4px solid var(--primary);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mission-vision li {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  line-height: 1.7;
+}
+
+.mv-title {
+  color: var(--secondary);
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 0.5rem;
+}

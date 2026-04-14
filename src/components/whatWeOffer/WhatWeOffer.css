@@ -1,0 +1,111 @@
+.what-we-offer {
+  background-color: var(--surface);
+}
+
+.offer-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .offer-wrapper {
+    flex-direction: row;
+  }
+}
+
+.offer-image-side {
+  flex: 1;
+  position: relative;
+}
+
+.offer-img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  object-fit: cover;
+  height: auto;
+  max-height: 600px;
+}
+
+.experience-badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  background-color: var(--primary);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  box-shadow: var(--shadow-md);
+  border: 10px solid var(--surface);
+}
+
+.experience-badge .years {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.experience-badge .text-exp {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.offer-content-side {
+  flex: 1;
+}
+
+.offer-intro {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  line-height: 1.8;
+}
+
+.offer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.offer-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.offer-icon {
+  background-color: rgba(30, 58, 138, 0.05);
+  color: var(--secondary);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+}
+
+.offer-item:hover .offer-icon {
+  background-color: var(--secondary);
+  color: white;
+  transform: scale(1.05);
+}
+
+.offer-item-title {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.offer-item-desc {
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.6;
+}
