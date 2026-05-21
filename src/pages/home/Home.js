@@ -13,7 +13,7 @@ import Keywords from '../../components/keywords/Keywords';
 const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "ونش انقاذ السخنة | أسرع ونش سيارات في مصر";
+    document.title = "ونش انقاذ السخنة | أسرع ونش سيارات في مصر | 01143433875";
   }, []);
 
   return (
