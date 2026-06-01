@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Phone, Clock, ShieldCheck, Zap, AlertTriangle, ArrowRight, CheckCircle2, HelpCircle, ChevronDown, MapPin, Wrench, Fuel, BatteryCharging, Route, ChevronLeft, Star, ThumbsUp, CarFront, Gauge } from 'lucide-react';
-import { phoneNumbers } from '../../data/phoneNumbers';
+import { Phone, Clock, ShieldCheck, Zap, AlertTriangle, ArrowRight, CheckCircle2, HelpCircle, ChevronDown, MapPin, Wrench, Fuel, BatteryCharging, Route, ChevronLeft, Star, ThumbsUp, CarFront, Gauge, MessageCircle } from 'lucide-react';
+import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
 import { areas } from '../../data/areas';
 import './AreaDetails.css';
 
@@ -14,6 +14,7 @@ const workImages = [
 const AreaDetails = () => {
   const { areaName } = useParams();
   const primaryPhone = phoneNumbers[0];
+  const whatsappNumber = (whatsappNumbers && whatsappNumbers[1]) || (whatsappNumbers && whatsappNumbers[0]) || phoneNumbers[1] || phoneNumbers[0];
   const [openFaq, setOpenFaq] = useState(null);
 
   const findGovernorate = (area) => {
@@ -226,6 +227,35 @@ const AreaDetails = () => {
                     <span>{s.label}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* Middle CTA Section */}
+              <div className="area-content-cta">
+                <div className="cta-header-row">
+                  <p className="cta-description">
+                    خدمة نقل السيارات 24/7 — اتصل بنا من <span className="cta-area-name">{areaName}</span> وسنكون عندك خلال دقائق
+                  </p>
+                  <div className="cta-icon-holder">
+                    <Phone className="cta-phone-icon" size={32} />
+                  </div>
+                </div>
+                <div className="cta-buttons-row">
+                  <a href={`tel:${primaryPhone}`} className="cta-btn cta-btn-phone">
+                    <Phone size={20} />
+                    <span dir="ltr">{primaryPhone}</span>
+                  </a>
+                  {whatsappNumber && (
+                    <a 
+                      href={`https://wa.me/2${whatsappNumber}`} 
+                      className="cta-btn cta-btn-whatsapp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <MessageCircle size={20} />
+                      <span dir="ltr">{whatsappNumber}</span>
+                    </a>
+                  )}
+                </div>
               </div>
 
               {/* Common Breakdown Causes */}
