@@ -5,18 +5,18 @@ import { phoneNumbers } from '../../data/phoneNumbers';
 import './Hero.css';
 
 const galleryImages = [
-  { src: '/images/1.jpeg', alt: 'ونش سحب سيارة' },
-  { src: '/images/2.jpeg', alt: 'إنقاذ سيارة على الطريق' },
-  { src: '/images/3.jpeg', alt: 'نقل سيارة بأمان' },
-  { src: '/images/4.jpeg', alt: 'فريق الإنقاذ في العمل' },
-  { src: '/images/5.jpeg', alt: 'ونش سحب سيارة' },
-  { src: '/images/6.jpeg', alt: 'إنقاذ سيارة على الطريق' },
-  { src: '/images/7.jpeg', alt: 'نقل سيارة بأمان' },
-  { src: '/images/8.jpeg', alt: 'فريق الإنقاذ في العمل' },
-  { src: '/images/9.jpeg', alt: 'ونش سحب سيارة' },
-  { src: '/images/10.jpeg', alt: 'إنقاذ سيارة على الطريق' },
-  { src: '/images/11.jpeg', alt: 'نقل سيارة بأمان' },
-  { src: '/images/12.jpeg', alt: 'فريق الإنقاذ في العمل' },
+  { src: '/images/1.webp', alt: 'ونش سحب سيارة' },
+  { src: '/images/2.webp', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/3.webp', alt: 'نقل سيارة بأمان' },
+  { src: '/images/4.webp', alt: 'فريق الإنقاذ في العمل' },
+  { src: '/images/5.webp', alt: 'ونش سحب سيارة' },
+  { src: '/images/6.webp', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/7.webp', alt: 'نقل سيارة بأمان' },
+  { src: '/images/8.webp', alt: 'فريق الإنقاذ في العمل' },
+  { src: '/images/9.webp', alt: 'ونش سحب سيارة' },
+  { src: '/images/10.webp', alt: 'إنقاذ سيارة على الطريق' },
+  { src: '/images/11.webp', alt: 'نقل سيارة بأمان' },
+  { src: '/images/12.webp', alt: 'فريق الإنقاذ في العمل' },
 ];
 
 const Hero = () => {
@@ -26,7 +26,7 @@ const Hero = () => {
     <section className="hero">
       {/* Full-bleed background */}
       <div className="hero-bg">
-        <img src="/images/hero.png" alt="" aria-hidden="true" className="hero-bg-img" />
+        <img src="/images/hero.webp" fetchpriority="high" alt="" aria-hidden="true" className="hero-bg-img" />
         <div className="hero-overlay" />
       </div>
 

@@ -6,9 +6,9 @@ import { areas } from '../../data/areas';
 import './AreaDetails.css';
 
 const workImages = [
-  '/images/9.jpeg',
-  '/images/10.jpeg',
-  '/images/11.jpeg',
+  '/images/9.webp',
+  '/images/10.webp',
+  '/images/11.webp',
 ];
 
 const AreaDetails = () => {

@@ -7,12 +7,12 @@ import { phoneNumbers } from '../../data/phoneNumbers';
 import './About.css';
 
 const fleetImages = [
-  { src: '/images/12.jpeg', alt: 'ونش انقاذ على الطريق' },
-  { src: '/images/13.jpeg', alt: 'سحب سيارة تالفة' },
-  { src: '/images/14.jpeg', alt: 'كشف أعطال ميداني' },
-  { src: '/images/15.jpeg', alt: 'نقل سيارة بأمان' },
-  { src: '/images/16.jpeg', alt: 'فريق الإنقاذ' },
-  { src: '/images/17.jpeg', alt: 'ونش مسطح حديث' },
+  { src: '/images/12.webp', alt: 'ونش انقاذ على الطريق' },
+  { src: '/images/13.webp', alt: 'سحب سيارة تالفة' },
+  { src: '/images/14.webp', alt: 'كشف أعطال ميداني' },
+  { src: '/images/15.webp', alt: 'نقل سيارة بأمان' },
+  { src: '/images/16.webp', alt: 'فريق الإنقاذ' },
+  { src: '/images/17.webp', alt: 'ونش مسطح حديث' },
 ];
 
 const whyUs = [
@@ -163,7 +163,7 @@ const About = () => {
 
       {/* CTA Banner */}
       <section className="about-cta-section">
-        <div className="about-cta-bg" style={{ backgroundImage: 'url(/images/18.jpeg)' }} />
+        <div className="about-cta-bg" style={{ backgroundImage: 'url(/images/18.webp)' }} />
         <div className="container about-cta-inner">
           <h2>هل أنت في موقف طارئ؟</h2>
           <p>أسرع ونش انقاذ في مصر — اتصل بنا الآن ونصلك في أقل من 30 دقيقة.</p>

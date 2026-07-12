@@ -36,7 +36,7 @@ const WhatWeOffer = () => {
 
         <div className="offer-wrapper">
           <div className="offer-image-side">
-            <img src="/images/2.jpeg" alt="ونش انقاذ اثناء العمل" className="offer-img" />
+            <img src="/images/2.webp" alt="ونش انقاذ اثناء العمل" className="offer-img" />
             <div className="experience-badge">
               <span className="years">15+</span>
               <span className="text-exp">عاماً من<br />الخبرة</span>
