@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, ChevronLeft, Search, X, Filter } from 'lucide-react';
 import { areas } from '../../data/areas';
+import { slugify } from '../../utils/slugify';
 import './ServiceAreas.css';
 
 const ServiceAreas = () => {
@@ -136,7 +137,7 @@ const ServiceAreas = () => {
                   <ul className="areas-list">
                     {gov.areas.map((area, idx) => (
                       <li key={idx}>
-                        <Link to={`/areas/${encodeURIComponent(area)}`} className="area-link">
+                        <Link to={`/winch/${slugify(area)}`} className="area-link">
                           <ChevronLeft size={16} />
                           ونش انقاذ {area}
                         </Link>
