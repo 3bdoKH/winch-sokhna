@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Phone, Clock, ShieldCheck, Zap, AlertTriangle, ArrowRight, CheckCircle2, HelpCircle, ChevronDown, MapPin, Wrench, Fuel, BatteryCharging, Route, ChevronLeft, Star, ThumbsUp, CarFront, Gauge, MessageCircle } from 'lucide-react';
+import { Phone, Clock, ShieldCheck, Zap, CheckCircle2, MapPin, MessageCircle } from 'lucide-react';
 import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
 import { areas } from '../../data/areas';
 import { slugify, getAreaNameFromSlug } from '../../utils/slugify';
@@ -17,8 +17,6 @@ const workImages = [
 
 const WinchLocationSEO = () => {
   const { location: slug } = useParams();
-  const navigate = useNavigate();
-  const [openFaq, setOpenFaq] = useState(null);
 
   // Phone numbers mapping
   const primaryPhone = phoneNumbers[0] || '01000000000';
