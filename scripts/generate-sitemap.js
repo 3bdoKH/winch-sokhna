@@ -74,7 +74,7 @@ ${allAreas.map(area => {
   const slug = slugify(area);
   if (!slug) return '';
   return `  <url>
-    <loc>${baseUrl}/winch/${slug}</loc>
+    <loc>${baseUrl}/winch/${encodeURIComponent(slug)}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>`;
