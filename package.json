@@ -41,6 +41,8 @@
     ]
   },
   "devDependencies": {
+    "express": "^5.2.1",
+    "puppeteer": "^25.3.0",
     "sharp": "^0.35.3"
   }
 }

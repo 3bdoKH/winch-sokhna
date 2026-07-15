@@ -19,7 +19,7 @@ const ServiceAreasPreview = () => {
 
         <div className="areas-grid">
           {topAreas.map((areaData, index) => (
-            <Link to={`/areas/${areaData.name}`} key={index} className="area-card-preview">
+            <Link to={`/winch/${areaData.name.replace(/ /g, '-')}`} key={index} className="area-card-preview">
               <MapPin size={24} className="area-icon" />
               <h3 className="area-name">{areaData.name}</h3>
             </Link>
