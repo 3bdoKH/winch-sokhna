@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MapPin, ChevronLeft, Search, X, Filter } from 'lucide-react';
 import { areas } from '../../data/areas';
 import { slugify } from '../../utils/slugify';
+import SEO from '../../components/seo/SEO';
 import './ServiceAreas.css';
 
 const ServiceAreas = () => {
@@ -11,7 +12,6 @@ const ServiceAreas = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "دليل مناطق التغطية | ونش انقاذ السخنة";
   }, []);
 
   const filteredAreas = useMemo(() => {
@@ -41,6 +41,11 @@ const ServiceAreas = () => {
 
   return (
     <div className="page-wrapper bg-light">
+      <SEO
+        title="دليل مناطق التغطية | ونش انقاذ السخنة"
+        description="دليل مناطق وشبكة تغطية ونش انقاذ السخنة في جميع المحافظات والمدن والطرق السريعة في مصر. اختر منطقتك واحصل على الخدمة في دقائق."
+        path="/areas"
+      />
       {/* Page Header */}
       <div className="page-header">
         <div className="container">

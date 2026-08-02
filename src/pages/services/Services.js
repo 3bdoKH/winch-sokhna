@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Fuel, BatteryCharging, Wrench, Settings, CheckCircle2, Phone, Route, SearchCode, ShieldCheck, Clock, Star, ArrowLeft } from 'lucide-react';
 import { phoneNumbers } from '../../data/phoneNumbers';
+import SEO from '../../components/seo/SEO';
 import './Services.css';
 
 const detailedServices = [
@@ -74,15 +75,15 @@ const Services = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "خدماتنا | ونش انقاذ السخنة";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'جميع خدمات ونش انقاذ السخنة: سحب سيارات، تزويد وقود، شحن بطاريات، تغيير إطارات، نقل معدات، وكشف أعطال. خدمة 24 ساعة 7 أيام.');
-    }
   }, []);
 
   return (
     <div className="page-wrapper">
+      <SEO
+        title="خدماتنا | ونش انقاذ السخنة"
+        description="جميع خدمات ونش انقاذ السخنة: سحب سيارات، تزويد وقود، شحن بطاريات، تغيير إطارات، نقل معدات، وكشف أعطال. خدمة 24 ساعة 7 أيام."
+        path="/services"
+      />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">خدمات الإنقاذ والدعم</h1>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, Calendar, Clock, User } from 'lucide-react';
 import { articlesAPI } from '../../api/articlesApi';
+import SEO from '../../components/seo/SEO';
 import './Articles.css';
 
 const Articles = () => {
@@ -11,7 +12,6 @@ const Articles = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "مدونة ونصائح | ونش انقاذ السخنة";
 
     const fetchArticles = async () => {
       try {
@@ -34,6 +34,11 @@ const Articles = () => {
 
   return (
     <div className="page-wrapper bg-light">
+      <SEO
+        title="مدونة ونصائح | ونش انقاذ السخنة"
+        description="اقرأ أحدث المقالات والنصائح حول إنقاذ السيارات، التعامل مع الأعطال المفاجئة على الطرق، والقيادة الآمنة."
+        path="/articles"
+      />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">مكتبة المقالات والنصائح</h1>

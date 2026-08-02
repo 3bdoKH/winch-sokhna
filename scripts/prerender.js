@@ -27,7 +27,7 @@ const extractUrlsFromSitemap = () => {
   while ((match = regex.exec(sitemapContent)) !== null) {
     const url = match[1];
     // Extract path from the full URL
-    const urlPath = url.replace('https://winchelsokhna.com', '');
+    const urlPath = url.replace('https://www.winchelsokhna.com', '').replace('https://winchelsokhna.com', '');
     if (urlPath && !urls.includes(urlPath)) {
       urls.push(urlPath);
     }

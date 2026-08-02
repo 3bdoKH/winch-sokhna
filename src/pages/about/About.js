@@ -4,6 +4,7 @@ import { Award, Users, Clock, Truck, ShieldCheck, Star, Phone, ArrowLeft } from 
 import Stats from '../../components/stats/Stats';
 import WhatWeOffer from '../../components/whatWeOffer/WhatWeOffer';
 import { phoneNumbers } from '../../data/phoneNumbers';
+import SEO from '../../components/seo/SEO';
 import './About.css';
 
 const fleetImages = [
@@ -35,11 +36,15 @@ const About = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "من نحن | ونش انقاذ السخنة";
   }, []);
 
   return (
     <div className="page-wrapper">
+      <SEO
+        title="من نحن | ونش انقاذ السخنة"
+        description="تعرف على شركة ونش انقاذ السخنة، أسطولنا الحديث، مسيرة نجاحنا، وفريق عملنا المتخصص في إنقاذ السيارات وسحبها 24/7."
+        path="/about"
+      />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">من نحن</h1>

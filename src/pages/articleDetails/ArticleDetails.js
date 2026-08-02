@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2, Calendar, Share2, User, Clock, Eye, Tag } from 'lucide-react';
 import { articlesAPI } from '../../api/articlesApi';
+import SEO from '../../components/seo/SEO';
 import './ArticleDetails.css';
 
 const ArticleDetails = () => {
@@ -20,7 +21,6 @@ const ArticleDetails = () => {
         const data = await articlesAPI.getBySlug(slug);
         if (data) {
           setArticle(data);
-          document.title = `${data.title} | مدونة ونش انقاذ السخنة`;
         } else {
           setError('المقال غير موجود.');
         }
@@ -67,6 +67,12 @@ const ArticleDetails = () => {
 
   return (
     <div className="article-details-page bg-light">
+      <SEO
+        title={`${article.title} | مدونة ونش انقاذ السخنة`}
+        description={article.excerpt || article.title}
+        path={`/articles/${slug}`}
+        image={article.image ? (article.image.startsWith('http') ? article.image : `https://winchenqaz.com${article.image}`) : undefined}
+      />
       <article className="container py-5">
         <div className="article-header-nav">
           <button className="btn-back-text" onClick={() => navigate('/articles')}>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Phone, Clock, ShieldCheck, Zap, AlertTriangle, ArrowRight, CheckCircle2, HelpCircle, ChevronDown, MapPin, Wrench, Fuel, BatteryCharging, Route, ChevronLeft, Star, ThumbsUp, CarFront, Gauge, MessageCircle } from 'lucide-react';
 import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
 import { areas } from '../../data/areas';
+import { customAreaContent, areaAliases } from '../../data/sokhnaContent';
 import './AreaDetails.css';
 
 const workImages = [
@@ -38,7 +39,10 @@ const AreaDetails = () => {
   const governorate = findGovernorate(areaName);
   const nearbyAreas = getNearbyAreas(areaName);
 
-  const faqs = [
+  const baseAreaName = areaAliases[areaName] || areaName;
+  const customContent = customAreaContent[baseAreaName];
+
+  const faqs = customContent?.faqs || [
     {
       q: `كم تستغرق الاستجابة لونش انقاذ في ${areaName}؟`,
       a: `في معظم الحالات، يصل ونش الإنقاذ إلى ${areaName} في غضون 15 إلى 30 دقيقة من لحظة الاتصال، وذلك حسب موقعك الدقيق وكثافة المرور. لدينا وحدات متمركزة في نقاط استراتيجية لضمان أسرع استجابة ممكنة.`
@@ -118,7 +122,7 @@ const AreaDetails = () => {
       metaDesc.name = 'description';
       document.head.appendChild(metaDesc);
     }
-    metaDesc.content = `ونش انقاذ ${areaName} - خدمة سحب سيارات 24 ساعة في ${areaName} و${governorate}. اتصل الآن للحصول على أسرع استجابة وأفضل سعر. رقم ونش ${areaName}: ${primaryPhone}`;
+    metaDesc.content = customContent?.metaDescription || `ونش انقاذ ${areaName} - خدمة سحب سيارات 24 ساعة في ${areaName} و${governorate}. اتصل الآن للحصول على أسرع استجابة وأفضل سعر. رقم ونش ${areaName}: ${primaryPhone}`;
 
     // JSON-LD Structured Data
     const existingScript = document.getElementById('area-jsonld');
@@ -161,7 +165,7 @@ const AreaDetails = () => {
           <div className="area-hero-content">
             <h1>ونش انقاذ <span className="highlight">{areaName}</span></h1>
             <p className="area-hero-subtitle">
-              إذا تعطلت سيارتك في {areaName} أو أي منطقة قريبة في {governorate}، نحن هنا لتقديم المساعدة الفورية. اتصل بأفضل خدمة نقل سيارات 24 ساعة.
+              {customContent?.heroSubtitle || `إذا تعطلت سيارتك في ${areaName} أو أي منطقة قريبة في ${governorate}، نحن هنا لتقديم المساعدة الفورية. اتصل بأفضل خدمة نقل سيارات 24 ساعة.`}
             </p>
             <a href={`tel:${primaryPhone}`} className="btn-primary call-cta">
               <Phone size={24} />
@@ -177,12 +181,12 @@ const AreaDetails = () => {
             <div className="main-article">
               <h2>هل تبحث عن ونش انقاذ في {areaName}؟</h2>
               <p>
-                تُعد منطقة {areaName} من المناطق الحيوية، وأعطال السيارات فيها قد تسبب تعطيلاً كبيراً لمشاويرك. لذلك وفرنا أسطولاً من سيارات الإنقاذ والأوناش المجهزة للتعامل مع أي عطل طارئ لسيارتك في {areaName}. بمكالمة واحدة فقط، يصلك فريق الدعم الخاص بنا في وقت قياسي.
+                {customContent?.intro || `تُعد منطقة ${areaName} من المناطق الحيوية، وأعطال السيارات فيها قد تسبب تعطيلاً كبيراً لمشاويرك. لذلك وفرنا أسطولاً من سيارات الإنقاذ والأوناش المجهزة للتعامل مع أي عطل طارئ لسيارتك في ${areaName}. بمكالمة واحدة فقط، يصلك فريق الدعم الخاص بنا في وقت قياسي.`}
               </p>
 
               <h3>لماذا نحن الخيار الأفضل للانقاذ في {areaName}؟</h3>
               <p>
-                نمتاز بالسرعة والاحترافية. عندما تقوم بالاتصال برقم ونش انقاذ {areaName}، يتم توجيه أقرب ونش لموقعك فوراً. الأوناش التابعة لنا حديثة ولن تتسبب في أي خدش للسيارة، سواء كانت سيارة ملاكي، رياضية، أو حتى نقل.
+                {customContent?.whyUs || `نمتاز بالسرعة والاحترافية. عندما تقوم بالاتصال برقم ونش انقاذ ${areaName}، يتم توجيه أقرب ونش لموقعك فوراً. الأوناش التابعة لنا حديثة ولن تتسبب في أي خدش للسيارة، سواء كانت سيارة ملاكي، رياضية، أو حتى نقل.`}
               </p>
 
               <div className="features-grid-seo">

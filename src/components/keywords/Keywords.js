@@ -1,24 +1,41 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { slugify } from '../../utils/slugify';
 import './Keywords.css';
 
 const Keywords = () => {
   const seoKeywords = [
-    "ونش انقاذ السخنة", "ارخص ونش انقاذ", "رقم ونش سيارات",
-    "اسرع ونش انقاذ", "ونش إنقاذ القاهرة", "ونش انقاذ طريق السويس",
-    "تغيير اطارات", "تزويد وقود", "انقاذ سيارات 24 ساعة",
-    "ونش مسطح", "ونش رفع سيارات", "ارقام ونش انقاذ السخنه",
-    "خدمة المساعدة على الطريق", "ونش انقاذ الجيزة", "ارخص ونش سيارات"
+    "ونش السخنه",
+    "ونش انقاذ السخنه",
+    "ونش العين السخنه",
+    "ونش انقاذ العين السخنه",
+    "ونش انقاذ العين السخنة",
+    "ونش السخنة",
+    "ونش العين السخنة",
+    "ونش انقاذ السخنة",
+    "رقم ونش انقاذ السخنة",
+    "ونش انقاذ بورتو السخنة",
+    "ونش انقاذ الجلالة",
+    "ونش انقاذ طريق السخنة",
+    "ارخص ونش انقاذ السخنة",
+    "ونش سيارات العين السخنة",
+    "ونش انقاذ السويس"
   ];
 
   return (
     <section className="keywords-section bg-light">
       <div className="container">
-        <h3 className="sr-only">الكلمات الدليلية للبحث</h3>
+        <h2 className="keywords-heading">الكلمات الأكثر بحثاً عن أوناش الإنقاذ في العين السخنة</h2>
         <div className="keywords-container">
           {seoKeywords.map((keyword, index) => (
-            <span key={index} className="keyword-tag">
+            <Link 
+              key={index} 
+              to={`/winch/${encodeURIComponent(slugify(keyword))}`} 
+              className="keyword-tag"
+              title={`خدمة ${keyword}`}
+            >
               #{keyword}
-            </span>
+            </Link>
           ))}
         </div>
       </div>

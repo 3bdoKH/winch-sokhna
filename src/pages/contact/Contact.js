@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Phone, MapPin, Mail, Clock, Send } from 'lucide-react';
 import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
 import FAQPreview from '../../components/faq/FAQ';
+import SEO from '../../components/seo/SEO';
 import './Contact.css';
 
 const Contact = () => {
@@ -10,7 +11,6 @@ const Contact = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "اتصل بنا | ونش انقاذ السخنة";
   }, []);
 
   const handleSubmit = (e) => {
@@ -20,6 +20,11 @@ const Contact = () => {
 
   return (
     <div className="page-wrapper">
+      <SEO
+        title="اتصل بنا | ونش انقاذ السخنة"
+        description="تواصل مع ونش انقاذ السخنة عبر الهاتف أو الواتساب على مدار 24 ساعة. نحن جاهزون للوصول إليك فوراً في أي موقع."
+        path="/contact"
+      />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">اتصل بنا</h1>
