@@ -88,12 +88,13 @@ const run = async () => {
       for (const urlPath of urlsToPrerender) {
         try {
           const url = `http://localhost:${PORT}${urlPath}`;
-          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+          await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
           
-          // Short wait for client hydration to settle
-          await page.waitForFunction(() => {
-            return !document.body.innerText.includes('جاري التحميل...');
-          }, { timeout: 3000 }).catch(() => {});
+          // Wait for main content or header to mount properly
+          await page.waitForSelector('h1, .seo-hero, .hero, .page-header, .seo-article', { timeout: 10000 }).catch(() => {});
+          
+          // Short delay for react-helmet-async head injection to settle
+          await new Promise(resolve => setTimeout(resolve, 800));
 
           const html = await page.content();
           const decodedPath = decodeURIComponent(urlPath).replace(/[|:?*<>]/g, '');

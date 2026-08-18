@@ -3,7 +3,7 @@ import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Phone, Clock, ShieldCheck, Zap, MapPin, 
-  MessageCircle, HelpCircle, Star, Wrench, 
+  MessageCircle, HelpCircle, Wrench, 
   Fuel, BatteryCharging, AlertTriangle, Gauge, Percent, DollarSign, Truck, FileText, ChevronLeft
 } from 'lucide-react';
 import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
@@ -93,25 +93,19 @@ const WinchLocationSEO = () => {
       
   const description = customData.metaDescription;
 
-  // Customer Reviews Mock Data (Structured for E-E-A-T & Google Reviews Schema)
-  const reviews = [
+  // Quality Guarantees & Standards (Authentic E-E-A-T)
+  const qualityGuarantees = [
     {
-      author: "أحمد محمود",
-      date: "2026-06-15",
-      text: `خدمة ممتازة وسريعة جداً في ${areaName}. الونش وصل في أقل من 10 دقائق بعد الاتصال بالرقم ${primaryPhone} والأسعار كانت منخفضة بخصم 50% بدون أي استغلال.`,
-      rating: 5
+      title: "أحدث أوناش وسطحات هيدروليكية",
+      desc: `نعتمد على سيارات إنقاذ وسطحات مجهزة بنظام هيدروليكي كامل لضمان رفع وسحب سيارتك في ${areaName} دون أي احتكاك أو ضرر بالهيكل.`
     },
     {
-      author: "محمود عبد الفتاح",
-      date: "2026-06-02",
-      text: `تعطلت سيارتي فجأة على الطريق في ${areaName}، اتصلت برقم الونش ${primaryPhone} وتم إرسال سطحة هيدروليكية حديثة ونقلت السيارة بأمان تام.`,
-      rating: 5
+      title: "تغطية مستمرة على مدار الساعة 24/7",
+      desc: `سواء كان العطل في منتصف النهار أو في أوقات متأخرة من الليل، فرق الإنقاذ متمركزة بالقرب من ${areaName} ومستعدة للتحرك الفوري.`
     },
     {
-      author: "خالد السيد",
-      date: "2026-05-20",
-      text: `أفضل وأرخص ونش إنقاذ سيارات في ${governorate}. احترافية عالية وسائق الونش كان حريصاً جداً على سلامة السيارة. أنصح بطلبهم على ${primaryPhone}.`,
-      rating: 5
+      title: "تسعير واضح وشفاف بدون مصاريف خفية",
+      desc: "نحدد التكلفة بشكل مسبق بناءً على المسافة ونوع السيارة، مع الالتزام التام بالأسعار المحددة دون أي إكراميات أو رسوم إضافية."
     }
   ];
 
@@ -126,14 +120,14 @@ const WinchLocationSEO = () => {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["AutomotiveBusiness", "LocalBusiness", "Service"],
+        "@type": ["EmergencyService", "AutomotiveBusiness"],
+        "@id": canonicalUrl,
         "name": `ونش انقاذ ${areaName}`,
         "alternateName": dynamicKeywords.length > 0 ? dynamicKeywords : [
           `ونش انقاذ ${areaName}`,
           `ونش ${areaName}`
         ],
         "image": heroImageUrl,
-        "@id": canonicalUrl,
         "url": canonicalUrl,
         "telephone": primaryPhone,
         "priceRange": "$$",
@@ -159,31 +153,16 @@ const WinchLocationSEO = () => {
           "@type": "AdministrativeArea",
           "name": areaName
         },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "5.0",
-          "bestRating": "5",
-          "worstRating": "1",
-          "ratingCount": "1601",
-          "reviewCount": "1601"
-        },
-        "review": reviews.map(r => ({
-          "@type": "Review",
-          "author": { "@type": "Person", "name": r.author },
-          "datePublished": r.date,
-          "reviewBody": r.text,
-          "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5", "worstRating": "1" }
-        })),
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": `خدمات ونش انقاذ ${areaName} خصم 50%`,
+          "name": `خدمات ونش انقاذ ${areaName}`,
           "itemListElement": [
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
                 "name": `ونش انقاذ سيارات ${areaName}`,
-                "description": `خدمة رفع وسحب السيارات المعطلة على مدار 24 ساعة عبر الاتصال بالرقم ${primaryPhone}`
+                "description": `خدمة رفع وسحب السيارات المعطلة وحوادث الطرق على مدار 24 ساعة عبر الاتصال بالرقم ${primaryPhone}`
               }
             },
             {
@@ -191,15 +170,15 @@ const WinchLocationSEO = () => {
               "itemOffered": {
                 "@type": "Service",
                 "name": `سطحة هيدروليكية ${areaName}`,
-                "description": "نقل السيارات الرياضية والفارهة بأمان تام دون احتكاك"
+                "description": "نقل السيارات الرياضية والفارهة والملاكي بأمان تام دون أي ضرر"
               }
             },
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": `شحن بطاريات وتغيير إطارات ${areaName}`,
-                "description": "خدمات الطوارئ السريعة في موقع العطل"
+                "name": `خدمات الطوارئ والمساعدة على الطريق ${areaName}`,
+                "description": "تزويد وقود طارئ، شحن بطاريات، وتغيير الإطارات في موقع العطل"
               }
             }
           ]
@@ -228,7 +207,7 @@ const WinchLocationSEO = () => {
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "مناطق الخدمة",
+            "name": "المناطق",
             "item": "https://www.winchelsokhna.com/areas"
           },
           {
@@ -430,19 +409,14 @@ const WinchLocationSEO = () => {
                 </ul>
               </div>
 
-              {/* Customer Reviews Section */}
-              <h2>آراء وتقييمات عملاء ونش انقاذ {areaName}</h2>
-              <p>تفقد تجارب عملائنا الحقيقيين ممن استعانوا بـ ونش انقاذ {areaName}:</p>
-              <div className="seo-reviews-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', margin: '25px 0' }}>
-                {reviews.map((rev, idx) => (
-                  <div key={idx} style={{ background: '#ffffff', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <strong style={{ color: '#0f172a' }}>{rev.author}</strong>
-                      <div style={{ display: 'flex', gap: '2px', color: '#f59e0b' }}>
-                        {[...Array(rev.rating)].map((_, i) => <Star key={i} size={16} fill="#f59e0b" />)}
-                      </div>
-                    </div>
-                    <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569' }}>"{rev.text}"</p>
+              {/* Quality Guarantees Section */}
+              <h2>معايير الأمان وجودة الخدمة في {areaName}</h2>
+              <p>نحرص على تطبيق أعلى معايير السلامة المهنية عند نقل أو سحب سيارتك في {areaName}:</p>
+              <div className="seo-guarantees-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', margin: '25px 0' }}>
+                {qualityGuarantees.map((item, idx) => (
+                  <div key={idx} style={{ background: '#ffffff', padding: '22px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', borderTop: '4px solid #ef4444' }}>
+                    <h4 style={{ color: '#0f172a', margin: '0 0 10px 0', fontSize: '1.1rem', fontWeight: 'bold' }}>{item.title}</h4>
+                    <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569', lineHeight: '1.7' }}>{item.desc}</p>
                   </div>
                 ))}
               </div>

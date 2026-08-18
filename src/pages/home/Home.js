@@ -30,7 +30,7 @@ const Home = () => {
               "@id": "https://www.winchelsokhna.com/#website",
               "url": "https://www.winchelsokhna.com",
               "name": "ونش انقاذ العين السخنة",
-              "description": "أسرع ونش انقاذ العين السخنة و ونش السخنه 24 ساعة. سحب إنقاذ سيارات بخصم 50%.",
+              "description": "أسرع ونش انقاذ العين السخنة و ونش السخنه 24 ساعة. سحب إنقاذ سيارات وخدمات مساعدة على الطريق.",
               "inLanguage": "ar"
             },
             {
@@ -42,7 +42,7 @@ const Home = () => {
               "telephone": "01143433875"
             },
             {
-              "@type": "AutomotiveBusiness",
+              "@type": ["EmergencyService", "AutomotiveBusiness"],
               "@id": "https://www.winchelsokhna.com/#localbusiness",
               "name": "ونش انقاذ العين السخنة - ونش السخنه",
               "alternateName": [
@@ -70,7 +70,7 @@ const Home = () => {
                 "latitude": "29.6105",
                 "longitude": "32.3486"
               },
-              "description": "أسرع ونش انقاذ العين السخنة و ونش السخنه 24 ساعة. سحب إنقاذ سيارات في السخنة والقرى السياحية وطريق الجلالة بخصم 50%. اتصل الان 01143433875.",
+              "description": "أسرع خدمة ونش انقاذ وسحب سيارات على مدار 24 ساعة في العين السخنة، طريق الجلالة، طريق الزعفرانة، وطريق القطامية - السخنة. اتصل الآن 01143433875.",
               "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -79,18 +79,54 @@ const Home = () => {
               },
               "areaServed": [
                 { "@type": "AdministrativeArea", "name": "العين السخنة" },
-                { "@type": "AdministrativeArea", "name": "طريق السخنة" },
+                { "@type": "AdministrativeArea", "name": "طريق العين السخنة" },
+                { "@type": "AdministrativeArea", "name": "طريق الجلالة" },
+                { "@type": "AdministrativeArea", "name": "طريق الزعفرانة" },
                 { "@type": "AdministrativeArea", "name": "بورتو السخنة" },
-                { "@type": "AdministrativeArea", "name": "الجلالة" }
+                { "@type": "AdministrativeArea", "name": "السويس" }
               ],
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "5.0",
-                "bestRating": "5",
-                "worstRating": "1",
-                "ratingCount": "1850",
-                "reviewCount": "1850"
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "خدمات ونش إنقاذ السيارات في العين السخنة",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "ونش إنقاذ وسحب سيارات السخنة",
+                      "description": "سحب ونقل السيارات المعطلة وحوادث الطرق على مدار 24 ساعة"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "سطحات هيدروليكية لنقل السيارات",
+                      "description": "نقل آمن للسيارات الحديثة والرياضية والفارهة بدون احتكاك"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "خدمات الطوارئ والمساعدة على الطريق",
+                      "description": "تزويد الوقود، شحن وتبديل البطاريات، وتغيير الإطارات في موقع العطل"
+                    }
+                  }
+                ]
               }
+            },
+            {
+              "@type": "SiteNavigationElement",
+              "@id": "https://www.winchelsokhna.com/#navigation",
+              "name": "أقسام ونش انقاذ السخنة",
+              "hasPart": [
+                { "@type": "WebPage", "name": "الرئيسية", "url": "https://www.winchelsokhna.com/" },
+                { "@type": "WebPage", "name": "خدماتنا", "url": "https://www.winchelsokhna.com/services" },
+                { "@type": "WebPage", "name": "مناطق التغطية", "url": "https://www.winchelsokhna.com/areas" },
+                { "@type": "WebPage", "name": "المقالات والنصائح", "url": "https://www.winchelsokhna.com/articles" },
+                { "@type": "WebPage", "name": "اتصل بنا", "url": "https://www.winchelsokhna.com/contact" }
+              ]
             }
           ]
         }}
