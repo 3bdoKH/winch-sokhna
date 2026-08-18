@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import { areas } from '../../data/areas';
-import { slugify } from '../../utils/slugify';
 import './ServiceAreasPreview.css';
 
 const ServiceAreasPreview = () => {
@@ -20,7 +19,7 @@ const ServiceAreasPreview = () => {
 
         <div className="areas-grid">
           {topAreas.map((areaData, index) => (
-            <Link to={`/winch/${slugify(areaData.name)}`} key={index} className="area-card-preview">
+            <Link to={`/winch/${areaData.slug}`} key={index} className="area-card-preview">
               <MapPin size={24} className="area-icon" />
               <h3 className="area-name">{areaData.name}</h3>
             </Link>

@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 const DEFAULT_DOMAIN = 'https://www.winchelsokhna.com';
 const DEFAULT_IMAGE = `${DEFAULT_DOMAIN}/images/10.webp`;
-const DEFAULT_SITE_NAME = 'ونش انقاذ السخنة';
+const DEFAULT_SITE_NAME = 'ونش انقاذ السخنة - ونش السخنه';
 
 const SEO = ({
   title,
@@ -29,6 +29,7 @@ const SEO = ({
 
       {/* Open Graph Tags */}
       <meta property="og:site_name" content={DEFAULT_SITE_NAME} />
+      <meta property="og:locale" content="ar_EG" />
       <meta property="og:title" content={title} />
       {description && <meta property="og:description" content={description} />}
       <meta property="og:url" content={finalCanonicalUrl} />
@@ -41,7 +42,7 @@ const SEO = ({
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={fullImageUrl} />
 
-      {/* JSON-LD Structured Data */}
+      {/* Structured Data (JSON-LD) */}
       {jsonLd && (
         <script type="application/ld+json">
           {JSON.stringify(jsonLd)}
@@ -52,3 +53,4 @@ const SEO = ({
 };
 
 export default SEO;
+

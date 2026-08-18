@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, Calendar } from 'lucide-react';
 import { articlesAPI } from '../../api/articlesApi';
+import { cleanText as cleanPhone } from '../../utils/cleanText';
 import './ArticlesSection.css';
 
 const ArticlesSection = () => {
@@ -50,7 +51,7 @@ const ArticlesSection = () => {
               <div key={article.id} className="article-card">
                 {article.image && (
                   <div className="article-card-image">
-                    <img src={`https://winchenqaz.com${article.image}`} alt={article.title} />
+                    <img src={`https://winchenqaz.com${article.image}`} alt={cleanPhone(article.title)} />
                     {article.category && (
                       <span className="article-badge">{article.category}</span>
                     )}
@@ -64,8 +65,8 @@ const ArticlesSection = () => {
                     </span>
                   </div>
 
-                  <h3 className="article-title">{article.title}</h3>
-                  <p className="article-excerpt">{article.excerpt}</p>
+                  <h3 className="article-title">{cleanPhone(article.title)}</h3>
+                  <p className="article-excerpt">{cleanPhone(article.excerpt)}</p>
 
                   <Link to={`/articles/${article.slug}`} className="article-read-more">
                     اقرأ المزيد <ArrowLeft size={16} />

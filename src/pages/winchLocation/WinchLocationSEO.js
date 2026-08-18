@@ -1,15 +1,17 @@
-import React, { useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Phone, Clock, ShieldCheck, Zap, MapPin, 
   MessageCircle, HelpCircle, Star, Wrench, 
-  Fuel, BatteryCharging, AlertTriangle, Gauge, Percent, DollarSign, Truck
+  Fuel, BatteryCharging, AlertTriangle, Gauge, Percent, DollarSign, Truck, FileText, ChevronLeft
 } from 'lucide-react';
 import { phoneNumbers, whatsappNumbers } from '../../data/phoneNumbers';
 import { areas } from '../../data/areas';
 import { slugify, getAreaNameFromSlug } from '../../utils/slugify';
 import { getAreaCustomData } from '../../data/areaCustomContent';
+import { LEGACY_SLUG_REDIRECTS } from '../../data/legacyRedirects';
+import { articlesAPI } from '../../api/articlesApi';
 import './WinchLocationSEO.css';
 
 const workImages = [
@@ -20,6 +22,32 @@ const workImages = [
 
 const WinchLocationSEO = () => {
   const { location: slug } = useParams();
+  const navigate = useNavigate();
+
+  const [recentArticles, setRecentArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const data = await articlesAPI.getAll();
+        setRecentArticles(data.slice(0, 3));
+      } catch (err) {
+        console.error('Error fetching articles', err);
+      }
+    };
+    fetchArticles();
+  }, []);
+
+  // Step 1.6 — Client-side safety net
+  useEffect(() => {
+    if (slug) {
+      const decodedSlug = decodeURIComponent(slug);
+      const canonical = LEGACY_SLUG_REDIRECTS[decodedSlug] || LEGACY_SLUG_REDIRECTS[slugify(decodedSlug)];
+      if (canonical) {
+        navigate(`/winch/${encodeURIComponent(canonical)}`, { replace: true });
+      }
+    }
+  }, [slug, navigate]);
 
   // Phone numbers mapping
   const primaryPhone = phoneNumbers[0] || '01143433875';
@@ -29,21 +57,15 @@ const WinchLocationSEO = () => {
   // Resolve slug to Arabic Name
   const areaName = useMemo(() => getAreaNameFromSlug(slug, areas), [slug]);
 
-  const governorate = useMemo(() => {
-    for (let gov of areas) {
-      if (gov.name === areaName || gov.areas.includes(areaName)) return gov.name;
-    }
-    return "مصر";
+  const currentArea = useMemo(() => {
+    return areas.find(a => a.name === areaName) || null;
   }, [areaName]);
 
-  const nearbyAreas = useMemo(() => {
-    for (let gov of areas) {
-      if (gov.areas.includes(areaName)) {
-        return gov.areas.filter(a => a !== areaName).slice(0, 12);
-      }
-    }
-    return [];
-  }, [areaName]);
+  const isValidArea = !!currentArea;
+
+  const governorate = currentArea?.region || "مصر";
+
+  const nearbyAreas = currentArea?.nearby?.map(n => getAreaNameFromSlug(n, areas)).filter(Boolean) || [];
 
   // Rich custom area content tailored to area and governorate
   const customData = useMemo(() => {
@@ -54,11 +76,21 @@ const WinchLocationSEO = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
+  if (!isValidArea) {
+    return <Navigate to="/" replace />;
+  }
+
   const isSokhna = areaName.includes("السخنة") || areaName.includes("السخنه") || governorate === "السويس";
-  const canonicalUrl = `https://www.winchelsokhna.com/winch/${slug}`;
-  const title = isSokhna 
-    ? `ونش انقاذ ${areaName} | ونش السخنه 24 ساعة | اتصل الان ${primaryPhone} خصم 50%` 
-    : `ونش انقاذ ${areaName} خصم 50% | اتصل الان ${primaryPhone} | أرخص ونش سيارات 24 ساعة`;
+  const canonicalUrl = `https://www.winchelsokhna.com/winch/${currentArea?.slug || slug}`;
+  
+  // 1. Dynamic Titles using Keywords
+  const dynamicKeywords = currentArea?.keywords || [];
+  const title = dynamicKeywords.length >= 2 
+    ? `${dynamicKeywords[0]} | ${dynamicKeywords[1]} | اتصل الان ${primaryPhone}`
+    : isSokhna 
+      ? `ونش انقاذ ${areaName} | ونش السخنه 24 ساعة | اتصل الان ${primaryPhone} خصم 50%` 
+      : `ونش انقاذ ${areaName} خصم 50% | اتصل الان ${primaryPhone} | أرخص ونش سيارات 24 ساعة`;
+      
   const description = customData.metaDescription;
 
   // Customer Reviews Mock Data (Structured for E-E-A-T & Google Reviews Schema)
@@ -83,137 +115,132 @@ const WinchLocationSEO = () => {
     }
   ];
 
-  // Comprehensive Structured Data (JSON-LD)
-  const schemas = [
-    // 1. LocalBusiness / AutomotiveBusiness
-    {
-      "@context": "https://schema.org",
-      "@type": ["LocalBusiness", "EmergencyService", "AutomotiveBusiness"],
-      "name": `ونش انقاذ ${areaName}`,
-      "alternateName": [
-        "ونش السخنه",
-        "ونش السخنة",
-        "ونش انقاذ السخنه",
-        "ونش انقاذ السخنة",
-        "ونش العين السخنه",
-        "ونش العين السخنة",
-        "ونش انقاذ العين السخنه",
-        "ونش انقاذ العين السخنة",
-        `ونش انقاذ ${areaName}`,
-        `ونش ${areaName}`
-      ],
-      "image": "https://www.winchelsokhna.com/images/10.webp",
-      "@id": canonicalUrl,
-      "url": canonicalUrl,
-      "telephone": primaryPhone,
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": areaName,
-        "addressRegion": governorate,
-        "addressCountry": "EG"
+  // 3. Dynamic Hero Image
+  const defaultImage = "https://www.winchelsokhna.com/images/10.webp";
+  const heroImageUrl = currentArea?.heroImage 
+    ? `https://www.winchelsokhna.com/${currentArea.heroImage.replace(/^\/+/, '')}`
+    : defaultImage;
+
+  // 2. Comprehensive Structured Data (JSON-LD)
+  const schemas = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["AutomotiveBusiness", "LocalBusiness", "Service"],
+        "name": `ونش انقاذ ${areaName}`,
+        "alternateName": dynamicKeywords.length > 0 ? dynamicKeywords : [
+          `ونش انقاذ ${areaName}`,
+          `ونش ${areaName}`
+        ],
+        "image": heroImageUrl,
+        "@id": canonicalUrl,
+        "url": canonicalUrl,
+        "telephone": primaryPhone,
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": areaName,
+          "addressRegion": governorate,
+          "addressCountry": "EG"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": currentArea?.lat || (isSokhna ? "29.6105" : "30.0444"),
+          "longitude": currentArea?.lng || (isSokhna ? "32.3486" : "31.2357")
+        },
+        "description": description,
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        },
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": areaName
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5.0",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "1601",
+          "reviewCount": "1601"
+        },
+        "review": reviews.map(r => ({
+          "@type": "Review",
+          "author": { "@type": "Person", "name": r.author },
+          "datePublished": r.date,
+          "reviewBody": r.text,
+          "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5", "worstRating": "1" }
+        })),
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": `خدمات ونش انقاذ ${areaName} خصم 50%`,
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": `ونش انقاذ سيارات ${areaName}`,
+                "description": `خدمة رفع وسحب السيارات المعطلة على مدار 24 ساعة عبر الاتصال بالرقم ${primaryPhone}`
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": `سطحة هيدروليكية ${areaName}`,
+                "description": "نقل السيارات الرياضية والفارهة بأمان تام دون احتكاك"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": `شحن بطاريات وتغيير إطارات ${areaName}`,
+                "description": "خدمات الطوارئ السريعة في موقع العطل"
+              }
+            }
+          ]
+        }
       },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": isSokhna ? "29.6105" : "30.0444",
-        "longitude": isSokhna ? "32.3486" : "31.2357"
+      {
+        "@type": "FAQPage",
+        "mainEntity": customData.faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.q,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.a
+          }
+        }))
       },
-      "description": description,
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        "opens": "00:00",
-        "closes": "23:59"
-      },
-      "areaServed": {
-        "@type": "AdministrativeArea",
-        "name": areaName
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "1601",
-        "reviewCount": "1601"
-      },
-      "review": reviews.map(r => ({
-        "@type": "Review",
-        "author": { "@type": "Person", "name": r.author },
-        "datePublished": r.date,
-        "reviewBody": r.text,
-        "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5", "worstRating": "1" }
-      })),
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": `خدمات ونش انقاذ ${areaName} خصم 50%`,
+      {
+        "@type": "BreadcrumbList",
         "itemListElement": [
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": `ونش انقاذ سيارات ${areaName}`,
-              "description": `خدمة رفع وسحب السيارات المعطلة على مدار 24 ساعة عبر الاتصال بالرقم ${primaryPhone}`
-            }
+            "@type": "ListItem",
+            "position": 1,
+            "name": "الرئيسية",
+            "item": "https://www.winchelsokhna.com/"
           },
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": `سطحة هيدروليكية ${areaName}`,
-              "description": "نقل السيارات الرياضية والفارهة بأمان تام دون احتكاك"
-            }
+            "@type": "ListItem",
+            "position": 2,
+            "name": "مناطق الخدمة",
+            "item": "https://www.winchelsokhna.com/areas"
           },
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": `شحن بطاريات وتغيير إطارات ${areaName}`,
-              "description": "خدمات الطوارئ السريعة في موقع العطل"
-            }
+            "@type": "ListItem",
+            "position": 3,
+            "name": `ونش انقاذ ${areaName}`,
+            "item": canonicalUrl
           }
         ]
       }
-    },
-    // 2. FAQ Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": customData.faqs.map(faq => ({
-        "@type": "Question",
-        "name": faq.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": faq.a
-        }
-      }))
-    },
-    // 3. BreadcrumbList Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "الرئيسية",
-          "item": "https://www.winchelsokhna.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "مناطق الخدمة",
-          "item": "https://www.winchelsokhna.com/areas"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": `ونش انقاذ ${areaName}`,
-          "item": canonicalUrl
-        }
-      ]
-    }
-  ];
+    ]
+  };
 
   const servicesList = [
     { icon: <Wrench size={22} />, title: `سحب وإنقاذ السيارات بـ ${areaName}`, desc: `رفع وسحب السيارات الملاكي والنقل المعطلة في ${areaName} بأحدث الأوناش اتصل بـ ${primaryPhone}.` },
@@ -243,13 +270,13 @@ const WinchLocationSEO = () => {
         <meta property="og:description" content={description} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://www.winchelsokhna.com/images/10.webp" />
+        <meta property="og:image" content={heroImageUrl} />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content="https://www.winchelsokhna.com/images/10.webp" />
+        <meta name="twitter:image" content={heroImageUrl} />
 
         {/* JSON-LD Scripts */}
         <script type="application/ld+json">
@@ -259,17 +286,14 @@ const WinchLocationSEO = () => {
 
       <div className="seo-location-page">
         {/* SEO Breadcrumb (Visual) */}
-        <div className="seo-breadcrumb container">
+        <nav aria-label="Breadcrumb" className="seo-breadcrumb container">
           <Link to="/">الرئيسية</Link> &gt; <Link to="/areas">المناطق</Link> &gt; <span>ونش انقاذ {areaName}</span>
-        </div>
+        </nav>
 
         {/* Hero Section */}
         <section className="seo-hero">
           <div className="seo-hero-bg" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'url(/images/9.webp) center/cover', opacity: 0.1, zIndex: 0 }}></div>
           <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-            <div className="discount-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#ef4444', color: 'white', padding: '8px 18px', borderRadius: '30px', fontSize: '1rem', fontWeight: 'bold', marginBottom: '18px', boxShadow: '0 4px 10px rgba(239, 68, 68, 0.4)' }}>
-              <Percent size={18} /> خصم حصري 50% على جميع خدمات ونش الإنقاذ وسحب السيارات
-            </div>
             <div className="seo-hero-content">
               <h1>أسرع وأرخص ونش انقاذ سيارات في <span className="highlight-text">{areaName}</span></h1>
               <p className="seo-hero-subtitle">{customData.heroSubtitle}</p>
@@ -454,7 +478,7 @@ const WinchLocationSEO = () => {
 
             {/* Sidebar */}
             <aside className="seo-sidebar">
-              <div className="seo-sidebar-box sticky">
+              <div className="seo-sidebar-box">
                 <h3>طوارئ {areaName}؟</h3>
                 <p>لا تضيع وقتك في الانتظار، اتصل برقم ونش انقاذ {areaName} الآن واحصل على خصم 50% فوري.</p>
                 
@@ -486,6 +510,40 @@ const WinchLocationSEO = () => {
                   <img key={idx} src={img} alt={`ونش انقاذ سيارات في ${areaName} - صورة ${idx+1}`} loading="lazy" width="300" height="200" />
                 ))}
               </div>
+
+              {/* Internal Links Sidebar */}
+              <div className="seo-sidebar-links">
+                <h3><MapPin size={18} /> مناطق تغطية أخرى</h3>
+                <ul>
+                  {areas.filter(a => a.name !== areaName).slice(0, 8).map((a, idx) => (
+                    <li key={idx}>
+                      <Link to={`/winch/${a.slug}`}>
+                        <ChevronLeft size={16} /> ونش انقاذ {a.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Recent Articles Sidebar */}
+              {recentArticles.length > 0 && (
+                <div className="seo-sidebar-articles">
+                  <h3><FileText size={18} /> أحدث المقالات</h3>
+                  <div className="sidebar-articles-list">
+                    {recentArticles.map((article) => (
+                      <Link key={article.id} to={`/articles/${article.slug}`} className="sidebar-article-card">
+                        {article.image && (
+                          <img src={`https://winchenqaz.com${article.image}`} alt={article.title} loading="lazy" />
+                        )}
+                        <div className="sidebar-article-info">
+                          <h4>{article.title}</h4>
+                          <span className="sidebar-article-date">اقرأ المزيد...</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </aside>
 
           </div>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2, Calendar, Share2, User, Clock, Eye, Tag } from 'lucide-react';
 import { articlesAPI } from '../../api/articlesApi';
 import SEO from '../../components/seo/SEO';
+import { cleanText } from '../../utils/cleanText';
 import './ArticleDetails.css';
 
 const ArticleDetails = () => {
@@ -65,13 +66,53 @@ const ArticleDetails = () => {
     );
   }
 
+  const cleanTitle = cleanText(article.title);
+  const cleanExcerpt = cleanText(article.excerpt);
+
   return (
     <div className="article-details-page bg-light">
       <SEO
-        title={`${article.title} | مدونة ونش انقاذ السخنة`}
-        description={article.excerpt || article.title}
+        title={`${cleanTitle} | مدونة ونش انقاذ السخنة`}
+        description={cleanExcerpt || cleanTitle}
         path={`/articles/${slug}`}
         image={article.image ? (article.image.startsWith('http') ? article.image : `https://winchenqaz.com${article.image}`) : undefined}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BlogPosting",
+              "@id": `https://www.winchelsokhna.com/articles/${slug}#article`,
+              "headline": cleanTitle,
+              "description": cleanExcerpt || cleanTitle,
+              "image": article.image ? (article.image.startsWith('http') ? article.image : `https://winchenqaz.com${article.image}`) : "https://www.winchelsokhna.com/images/10.webp",
+              "datePublished": article.date || new Date().toISOString(),
+              "author": {
+                "@type": "Person",
+                "name": cleanText(article.author) || "ونش انقاذ السخنة"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "ونش انقاذ السخنة",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://www.winchelsokhna.com/images/10.webp"
+                }
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://www.winchelsokhna.com/articles/${slug}`
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "المقالات", "item": "https://www.winchelsokhna.com/articles" },
+                { "@type": "ListItem", "position": 3, "name": cleanTitle, "item": `https://www.winchelsokhna.com/articles/${slug}` }
+              ]
+            }
+          ]
+        }}
       />
       <article className="container py-5">
         <div className="article-header-nav">
@@ -83,7 +124,7 @@ const ArticleDetails = () => {
         <div className="article-content-wrapper">
           {article.image && (
             <div className="article-hero-image">
-              <img src={`https://winchenqaz.com${article.image}`} alt={article.title} />
+              <img src={`https://winchenqaz.com${article.image}`} alt={cleanTitle} width="800" height="450" />
               {article.category && (
                 <span className="hero-category-badge">{article.category}</span>
               )}
@@ -94,12 +135,12 @@ const ArticleDetails = () => {
           )}
 
           <header className={`article-main-header ${article.image ? 'with-hero' : ''}`}>
-            <h1 className="article-main-title">{article.title}</h1>
+            <h1 className="article-main-title">{cleanTitle}</h1>
 
             <div className="article-meta-info-bar">
               {article.author && (
                 <span className="info-badge">
-                  <User size={16} /> {article.author}
+                  <User size={16} /> {cleanText(article.author)}
                 </span>
               )}
               {article.date && (
@@ -129,13 +170,13 @@ const ArticleDetails = () => {
             </div>
 
             {article.excerpt && (
-              <p className="article-lead-excerpt">{article.excerpt}</p>
+              <p className="article-lead-excerpt">{cleanExcerpt}</p>
             )}
           </header>
 
           <div
             className="article-html-content"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: cleanText(article.content) }}
           />
 
           {article.tags && article.tags.length > 0 && (

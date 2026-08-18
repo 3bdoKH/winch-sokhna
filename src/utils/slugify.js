@@ -23,10 +23,12 @@ export const getAreaNameFromSlug = (slug, areasList) => {
   const maybeName = slug.replace(/-/g, ' ');
   
   if (areasList && Array.isArray(areasList)) {
-    for (const gov of areasList) {
-      if (gov.name === maybeName || slugify(gov.name) === slug) return gov.name;
-      for (const area of gov.areas) {
-        if (area === maybeName || slugify(area) === slug) return area;
+    for (const area of areasList) {
+      if (area.slug === slug || slugify(area.slug || area.name) === slug || slugify(area.name) === slug) {
+        return area.name;
+      }
+      if (area.keywords && area.keywords.includes(maybeName)) {
+        return area.name;
       }
     }
   }

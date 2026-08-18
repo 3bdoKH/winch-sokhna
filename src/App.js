@@ -24,7 +24,7 @@ function App() {
       <Router>
         <div className="App">
           <Header />
-          <div className="main-content">
+          <main className="main-content" id="main-content">
             <Suspense fallback={<div style={{ padding: '50px', textAlign: 'center' }}>جاري التحميل...</div>}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -37,7 +37,7 @@ function App() {
                 <Route path="/articles/:slug" element={<ArticleDetails />} />
               </Routes>
             </Suspense>
-          </div>
+          </main>
           <FloatingPhoneIcons />
           <Footer />
         </div>

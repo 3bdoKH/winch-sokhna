@@ -83,13 +83,36 @@ const Services = () => {
         title="خدماتنا | ونش انقاذ السخنة"
         description="جميع خدمات ونش انقاذ السخنة: سحب سيارات، تزويد وقود، شحن بطاريات، تغيير إطارات، نقل معدات، وكشف أعطال. خدمة 24 ساعة 7 أيام."
         path="/services"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              "name": "خدمات ونش انقاذ وسحب السيارات",
+              "provider": {
+                "@type": "AutomotiveBusiness",
+                "name": "ونش انقاذ السخنة",
+                "url": "https://www.winchelsokhna.com"
+              },
+              "areaServed": "العين السخنة، السويس، القاهرة، الجيزة",
+              "description": "خدمات إنقاذ السيارات وسحبها وتزود الوقود وشحن البطاريات وتغير الإطارات على مدار 24 ساعة."
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "خدماتنا", "item": "https://www.winchelsokhna.com/services" }
+              ]
+            }
+          ]
+        }}
       />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">خدمات الإنقاذ والدعم</h1>
-          <p className="page-breadcrumb">
+          <nav aria-label="Breadcrumb" className="page-breadcrumb">
             <Link to="/">الرئيسية</Link> / <span>خدماتنا</span>
-          </p>
+          </nav>
         </div>
       </div>
 
@@ -123,7 +146,7 @@ const Services = () => {
             {detailedServices.map((service) => (
               <div key={service.id} className="detailed-service-card">
                 <div className="service-image-thumb">
-                  <img src={service.image} alt={service.title} loading="lazy" />
+                  <img src={service.image} alt={service.title} loading="lazy" width="400" height="260" />
                   <div className="service-icon-large">
                     {service.icon}
                   </div>

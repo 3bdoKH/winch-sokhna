@@ -46,11 +46,11 @@ const Header = () => {
         </nav>
 
         <div className="header-actions">
-          <a href={`tel:${primaryPhone}`} className="btn-primary d-none-mobile">
+          <a href={`tel:${primaryPhone}`} className="btn-primary d-none-mobile" aria-label={`اتصل بـ ونش انقاذ السخنة على ${primaryPhone}`}>
             <Phone size={18} />
             {primaryPhone}
           </a>
-          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="Toggle Menu">
+          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="فتح قائمة الملاحة الرئيسية" aria-expanded={isMenuOpen}>
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

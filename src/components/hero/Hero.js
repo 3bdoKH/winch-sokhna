@@ -111,7 +111,7 @@ const Hero = () => {
           <div className="gallery-strip-imgs">
             {galleryImages.map((img, i) => (
               <div key={i} className="gallery-strip-item">
-                <img src={img.src} alt={img.alt} loading="lazy" />
+                <img src={img.src} alt={img.alt} loading="lazy" width="160" height="100" />
                 <div className="gallery-strip-overlay">{img.alt}</div>
               </div>
             ))}

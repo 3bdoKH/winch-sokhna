@@ -44,13 +44,32 @@ const About = () => {
         title="من نحن | ونش انقاذ السخنة"
         description="تعرف على شركة ونش انقاذ السخنة، أسطولنا الحديث، مسيرة نجاحنا، وفريق عملنا المتخصص في إنقاذ السيارات وسحبها 24/7."
         path="/about"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "AboutPage",
+              "@id": "https://www.winchelsokhna.com/about#webpage",
+              "url": "https://www.winchelsokhna.com/about",
+              "name": "من نحن | ونش انقاذ السخنة",
+              "description": "تعرف على شركة ونش انقاذ السخنة، أسطولنا الحديث، مسيرة نجاحنا، وفريق عملنا المتخصص في إنقاذ السيارات وسحبها 24/7."
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "من نحن", "item": "https://www.winchelsokhna.com/about" }
+              ]
+            }
+          ]
+        }}
       />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">من نحن</h1>
-          <p className="page-breadcrumb">
+          <nav aria-label="Breadcrumb" className="page-breadcrumb">
             <Link to="/">الرئيسية</Link> / <span>من نحن</span>
-          </p>
+          </nav>
         </div>
       </div>
 
@@ -112,7 +131,7 @@ const About = () => {
           <div className="fleet-photo-grid">
             {fleetImages.map((img, i) => (
               <div key={i} className={`fleet-photo-item ${i === 0 ? 'featured' : ''}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" />
+                <img src={img.src} alt={img.alt} loading="lazy" width="400" height="260" />
                 <div className="fleet-photo-overlay">
                   <span>{img.alt}</span>
                 </div>

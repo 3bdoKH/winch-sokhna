@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, Calendar, Clock, User } from 'lucide-react';
 import { articlesAPI } from '../../api/articlesApi';
 import SEO from '../../components/seo/SEO';
+import { cleanText as cleanPhone } from '../../utils/cleanText';
 import './Articles.css';
 
 const Articles = () => {
@@ -38,13 +39,32 @@ const Articles = () => {
         title="مدونة ونصائح | ونش انقاذ السخنة"
         description="اقرأ أحدث المقالات والنصائح حول إنقاذ السيارات، التعامل مع الأعطال المفاجئة على الطرق، والقيادة الآمنة."
         path="/articles"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Blog",
+              "@id": "https://www.winchelsokhna.com/articles#blog",
+              "url": "https://www.winchelsokhna.com/articles",
+              "name": "مدونة ونش انقاذ السخنة",
+              "description": "اقرأ أحدث المقالات والنصائح حول إنقاذ السيارات والقيادة الآمنة."
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "المقالات", "item": "https://www.winchelsokhna.com/articles" }
+              ]
+            }
+          ]
+        }}
       />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">مكتبة المقالات والنصائح</h1>
-          <p className="page-breadcrumb">
+          <nav aria-label="Breadcrumb" className="page-breadcrumb">
             <Link to="/">الرئيسية</Link> / <span>المقالات</span>
-          </p>
+          </nav>
         </div>
       </div>
 
@@ -73,7 +93,7 @@ const Articles = () => {
                 <div key={article.id} className="article-list-card">
                   {article.image && (
                     <Link to={`/articles/${article.slug}`} className="article-list-image">
-                      <img src={`https://winchenqaz.com${article.image}`} alt={article.title} />
+                      <img src={`https://winchenqaz.com${article.image}`} alt={cleanPhone(article.title)} width="400" height="250" loading="lazy" />
                       {article.category && (
                         <span className="article-badge-main">{article.category}</span>
                       )}
@@ -87,7 +107,7 @@ const Articles = () => {
                           <span className="meta-info"><Calendar size={14} /> {formatDate(article.date)}</span>
                         )}
                         {article.author && (
-                          <span className="meta-info"><User size={14} /> {article.author}</span>
+                          <span className="meta-info"><User size={14} /> {cleanPhone(article.author)}</span>
                         )}
                         {article.read_time && (
                           <span className="meta-info"><Clock size={14} /> {article.read_time}</span>
@@ -96,10 +116,10 @@ const Articles = () => {
                     </div>
 
                     <h3 className="article-title-lg">
-                      <Link to={`/articles/${article.slug}`}>{article.title}</Link>
+                      <Link to={`/articles/${article.slug}`}>{cleanPhone(article.title)}</Link>
                     </h3>
 
-                    <p className="article-excerpt-lg">{article.excerpt}</p>
+                    <p className="article-excerpt-lg">{cleanPhone(article.excerpt)}</p>
 
                     <div className="article-footer-row">
                       <Link to={`/articles/${article.slug}`} className="btn-secondary read-more-btn">

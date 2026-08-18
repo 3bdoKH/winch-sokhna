@@ -151,7 +151,7 @@ const AreaDetails = () => {
       const s = document.getElementById('area-jsonld');
       if (s) s.remove();
     };
-  }, [areaName, governorate, primaryPhone]);
+  }, [areaName, governorate, primaryPhone, customContent?.metaDescription]);
 
   return (
     <div className="area-details-page">

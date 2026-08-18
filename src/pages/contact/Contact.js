@@ -24,13 +24,32 @@ const Contact = () => {
         title="اتصل بنا | ونش انقاذ السخنة"
         description="تواصل مع ونش انقاذ السخنة عبر الهاتف أو الواتساب على مدار 24 ساعة. نحن جاهزون للوصول إليك فوراً في أي موقع."
         path="/contact"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "ContactPage",
+              "@id": "https://www.winchelsokhna.com/contact#webpage",
+              "url": "https://www.winchelsokhna.com/contact",
+              "name": "اتصل بنا | ونش انقاذ السخنة",
+              "description": "تواصل مع ونش انقاذ السخنة عبر الهاتف أو الواتساب على مدار 24 ساعة."
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "اتصل بنا", "item": "https://www.winchelsokhna.com/contact" }
+              ]
+            }
+          ]
+        }}
       />
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">اتصل بنا</h1>
-          <p className="page-breadcrumb">
+          <nav aria-label="Breadcrumb" className="page-breadcrumb">
             <Link to="/">الرئيسية</Link> / <span>اتصل بنا</span>
-          </p>
+          </nav>
         </div>
       </div>
 

@@ -383,3 +383,137 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
+
+/* Sidebar Links */
+.seo-sidebar-links {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin-top: 2.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.seo-sidebar-links h3 {
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seo-sidebar-links h3 svg {
+  color: #ef4444;
+}
+
+.seo-sidebar-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.seo-sidebar-links li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #475569;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.seo-sidebar-links li a:hover {
+  background: #f8fafc;
+  color: #ef4444;
+  transform: translateX(-4px);
+}
+
+/* Sidebar Articles */
+.seo-sidebar-articles {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin-top: 2.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.seo-sidebar-articles h3 {
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seo-sidebar-articles h3 svg {
+  color: #ef4444;
+}
+
+.sidebar-articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sidebar-article-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+}
+
+.sidebar-article-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sidebar-article-card:hover {
+  transform: translateX(-4px);
+}
+
+.sidebar-article-card img {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sidebar-article-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sidebar-article-info h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+.sidebar-article-card:hover .sidebar-article-info h4 {
+  color: #ef4444;
+}
+
+.sidebar-article-date {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}

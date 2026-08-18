@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, ChevronLeft, Search, X, Filter } from 'lucide-react';
 import { areas } from '../../data/areas';
-import { slugify } from '../../utils/slugify';
 import SEO from '../../components/seo/SEO';
 import './ServiceAreas.css';
 
@@ -14,8 +13,21 @@ const ServiceAreas = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Group the flat areas array by region (Governorate)
+  const groupedAreas = useMemo(() => {
+    const groups = {};
+    areas.forEach(area => {
+      const region = area.region || 'أخرى';
+      if (!groups[region]) {
+        groups[region] = { name: region, areas: [] };
+      }
+      groups[region].areas.push(area);
+    });
+    return Object.values(groups);
+  }, []);
+
   const filteredAreas = useMemo(() => {
-    let govList = areas;
+    let govList = groupedAreas;
 
     if (activeGov !== 'all') {
       govList = govList.filter(gov => gov.name === activeGov);
@@ -27,10 +39,10 @@ const ServiceAreas = () => {
     return govList
       .map(gov => ({
         ...gov,
-        areas: gov.areas.filter(area => area.includes(q))
+        areas: gov.areas.filter(area => area.name.includes(q) || (area.keywords && area.keywords.some(kw => kw.includes(q))))
       }))
       .filter(gov => gov.areas.length > 0 || gov.name.includes(q));
-  }, [searchQuery, activeGov]);
+  }, [searchQuery, activeGov, groupedAreas]);
 
   const totalResults = filteredAreas.reduce((sum, gov) => sum + gov.areas.length, 0);
 
@@ -45,14 +57,33 @@ const ServiceAreas = () => {
         title="دليل مناطق التغطية | ونش انقاذ السخنة"
         description="دليل مناطق وشبكة تغطية ونش انقاذ السخنة في جميع المحافظات والمدن والطرق السريعة في مصر. اختر منطقتك واحصل على الخدمة في دقائق."
         path="/areas"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "ItemPage",
+              "@id": "https://www.winchelsokhna.com/areas#webpage",
+              "url": "https://www.winchelsokhna.com/areas",
+              "name": "مناطق التغطية لخدمات ونش انقاذ السخنة",
+              "description": "دليل مناطق وشبكة تغطية ونش انقاذ السخنة في جميع المحافظات والمدن والطرق السريعة في مصر."
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://www.winchelsokhna.com/" },
+                { "@type": "ListItem", "position": 2, "name": "مناطق التغطية", "item": "https://www.winchelsokhna.com/areas" }
+              ]
+            }
+          ]
+        }}
       />
       {/* Page Header */}
       <div className="page-header">
         <div className="container">
           <h1 className="page-title">مناطق التغطية لخدماتنا</h1>
-          <p className="page-breadcrumb">
+          <nav aria-label="Breadcrumb" className="page-breadcrumb">
             <Link to="/">الرئيسية</Link> / <span>مناطق التغطية</span>
-          </p>
+          </nav>
         </div>
       </div>
 
@@ -72,7 +103,7 @@ const ServiceAreas = () => {
               <input
                 type="text"
                 className="search-input"
-                placeholder="ابحث عن منطقتك... (مثال: المعادي، الشروق)"
+                placeholder="ابحث عن منطقتك... (مثال: السويس، الجلالة)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 dir="rtl"
@@ -108,9 +139,9 @@ const ServiceAreas = () => {
                 className={`gov-tab ${activeGov === 'all' ? 'active' : ''}`}
                 onClick={() => setActiveGov('all')}
               >
-                جميع المحافظات
+                جميع المناطق
               </button>
-              {areas.map((gov, i) => (
+              {groupedAreas.map((gov, i) => (
                 <button
                   key={i}
                   className={`gov-tab ${activeGov === gov.name ? 'active' : ''}`}
@@ -136,15 +167,15 @@ const ServiceAreas = () => {
                 <div key={index} className="governorate-card">
                   <h3 className="governorate-title">
                     <MapPin size={24} className="gov-icon" />
-                    محافظة {gov.name}
+                    {gov.name}
                     <span className="gov-area-count">{gov.areas.length} منطقة</span>
                   </h3>
                   <ul className="areas-list">
                     {gov.areas.map((area, idx) => (
                       <li key={idx}>
-                        <Link to={`/winch/${slugify(area)}`} className="area-link">
+                        <Link to={`/winch/${area.slug}`} className="area-link">
                           <ChevronLeft size={16} />
-                          ونش انقاذ {area}
+                          ونش انقاذ {area.name}
                         </Link>
                       </li>
                     ))}

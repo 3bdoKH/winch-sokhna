@@ -2,13 +2,75 @@
   RewriteEngine On
   RewriteBase /
 
-  # 1. Force HTTPS
+  # 1. Combine Force HTTPS and www redirect into a single rule to avoid redirect chains
+  #    The [B] flag ensures Arabic/non-ASCII characters are properly URL-encoded in the Location header
+  RewriteCond %{HTTP_HOST} ^winchelsokhna\.com$ [NC,OR]
   RewriteCond %{HTTPS} off
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+  RewriteRule ^ https://www.winchelsokhna.com%{REQUEST_URI} [R=301,L]
 
-  # 2. Redirect www to non-www (Fixes SSL Common Name Invalid if certificate covers non-www)
-  RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+  # 2. Skip rewrite for sitemap.xml and robots.txt explicitly
+  RewriteRule ^(sitemap\.xml|robots\.txt)$ - [L]
+
+  # 2.5 Legacy duplicate-slug redirects
+  RewriteRule ^winch/ونش-انقاذ-العين-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-العين-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-العين-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-ونش-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-ونش-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-ونش-العين-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/ونش-انقاذ-ونش-العين-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/العين-السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/العين-السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/السخنة/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+  RewriteRule ^winch/السخنه/?$ /winch/ونش-انقاذ-العين-السخنة [R=301,L]
+
+  # Renamed legitimate pages (missing the "ونش-انقاذ-" prefix)
+  RewriteRule ^winch/السويس/?$ /winch/ونش-انقاذ-السويس [R=301,L]
+  RewriteRule ^winch/حي-السويس/?$ /winch/ونش-انقاذ-حي-السويس [R=301,L]
+  RewriteRule ^winch/حي-الأربعين/?$ /winch/ونش-انقاذ-حي-الأربعين [R=301,L]
+  RewriteRule ^winch/حي-عتاقة/?$ /winch/ونش-انقاذ-حي-عتاقة [R=301,L]
+  RewriteRule ^winch/حي-الجناين/?$ /winch/ونش-انقاذ-حي-الجناين [R=301,L]
+  RewriteRule ^winch/حي-فيصل/?$ /winch/ونش-انقاذ-حي-فيصل [R=301,L]
+  RewriteRule ^winch/عتاقة-البلد/?$ /winch/ونش-انقاذ-عتاقة-البلد [R=301,L]
+  RewriteRule ^winch/السويس-الجديدة/?$ /winch/ونش-انقاذ-السويس-الجديدة [R=301,L]
+  RewriteRule ^winch/المدينة-الصناعية/?$ /winch/ونش-انقاذ-المدينة-الصناعية [R=301,L]
+  RewriteRule ^winch/المنطقة-الحرة/?$ /winch/ونش-انقاذ-المنطقة-الحرة [R=301,L]
+  RewriteRule ^winch/مدينة-السلام/?$ /winch/ونش-انقاذ-مدينة-السلام [R=301,L]
+  RewriteRule ^winch/مدينة-النور/?$ /winch/ونش-انقاذ-مدينة-النور [R=301,L]
+  RewriteRule ^winch/ميناء-السويس/?$ /winch/ونش-انقاذ-ميناء-السويس [R=301,L]
+  RewriteRule ^winch/ميناء-السخنة/?$ /winch/ونش-انقاذ-ميناء-السخنة [R=301,L]
+  RewriteRule ^winch/بورتو-السخنة/?$ /winch/ونش-انقاذ-بورتو-السخنة [R=301,L]
+  RewriteRule ^winch/بوابات-العين-السخنة/?$ /winch/ونش-انقاذ-بوابات-العين-السخنة [R=301,L]
+  RewriteRule ^winch/اميجو-العين-السخنة/?$ /winch/ونش-انقاذ-اميجو-العين-السخنة [R=301,L]
+  RewriteRule ^winch/طريق-الجلالة/?$ /winch/ونش-انقاذ-طريق-الجلالة [R=301,L]
+  RewriteRule ^winch/هضبة-الجلالة/?$ /winch/ونش-انقاذ-هضبة-الجلالة [R=301,L]
+  RewriteRule ^winch/جامعة-الجلالة/?$ /winch/ونش-انقاذ-جامعة-الجلالة [R=301,L]
+  RewriteRule ^winch/المونت-جلالة/?$ /winch/ونش-انقاذ-المونت-جلالة [R=301,L]
+  RewriteRule ^winch/بوابات-الجلالة/?$ /winch/ونش-انقاذ-بوابات-الجلالة [R=301,L]
+  RewriteRule ^winch/الجلالة/?$ /winch/ونش-انقاذ-الجلالة [R=301,L]
+  RewriteRule ^winch/طريق-السخنة/?$ /winch/ونش-انقاذ-طريق-السخنة [R=301,L]
+  RewriteRule ^winch/طريق-الإقليمي/?$ /winch/ونش-انقاذ-طريق-الإقليمي [R=301,L]
+  RewriteRule ^winch/طريق-القطامية/?$ /winch/ونش-انقاذ-طريق-القطامية [R=301,L]
+  RewriteRule ^winch/طريق-جنيفة/?$ /winch/ونش-انقاذ-طريق-جنيفة [R=301,L]
+  RewriteRule ^winch/طريق-القاهره-السويس/?$ /winch/ونش-انقاذ-طريق-القاهرة-السويس [R=301,L]
+  RewriteRule ^winch/الزعفرانة/?$ /winch/ونش-انقاذ-الزعفرانة [R=301,L]
+  RewriteRule ^winch/عجرود/?$ /winch/ونش-انقاذ-عجرود [R=301,L]
+
+  # Simplified/merged variants
+  RewriteRule ^winch/الأدبية/?$ /winch/ونش-انقاذ-طريق-الأدبية [R=301,L]
+  RewriteRule ^winch/طريق-الادبية/?$ /winch/ونش-انقاذ-طريق-الأدبية [R=301,L]
+  RewriteRule ^winch/نفق-الشهيد-احمد-حمدى/?$ /winch/ونش-انقاذ-نفق-أحمد-حمدي [R=301,L]
+  RewriteRule ^winch/وادي-حجول-طريق-السويس/?$ /winch/ونش-انقاذ-وادي-حجول [R=301,L]
+  RewriteRule ^winch/ام-قمر-طريق-السويس/?$ /winch/ونش-انقاذ-أم-قمر [R=301,L]
+  RewriteRule ^winch/طريق-السويس/?$ /winch/ونش-انقاذ-طريق-القاهرة-السويس [R=301,L]
+  RewriteRule ^winch/طريق-الجلالة-الجديد/?$ /winch/ونش-انقاذ-طريق-الجلالة [R=301,L]
+  RewriteRule ^winch/طريق-الزعفرانة-بني-سويف/?$ /winch/ونش-انقاذ-طريق-الزعفرانة [R=301,L]
+  RewriteRule ^winch/طريق-السخنة-الزعفرانة/?$ /winch/ونش-انقاذ-طريق-الزعفرانة [R=301,L]
+  RewriteRule ^winch/طريق-الجلالة-الزعفرانة/?$ /winch/ونش-انقاذ-طريق-الجلالة [R=301,L]
 
   # 3. Handle React Client-side Routing Fallback
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -16,3 +78,35 @@
   RewriteCond %{REQUEST_FILENAME} !-l
   RewriteRule . /index.html [L]
 </IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/xml .xml
+</IfModule>
+
+# Enable Gzip / Brotli Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+</IfModule>
+
+# Browser Caching & WebP MIME Type
+<IfModule mod_expires.c>
+  ExpiresActive On
+  AddType image/webp .webp
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+

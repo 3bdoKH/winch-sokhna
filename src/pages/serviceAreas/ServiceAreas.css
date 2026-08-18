@@ -1,15 +1,20 @@
+/* ServiceAreas.css - Modernized */
 .page-header {
-  background-color: var(--secondary);
+  background: linear-gradient(135deg, var(--secondary) 0%, #3b82f6 100%);
   color: white;
-  padding: 4rem 0;
+  padding: 5rem 0 5rem;
   text-align: center;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
+  font-weight: 800;
   margin-bottom: 1rem;
   color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .page-breadcrumb {
@@ -17,16 +22,30 @@
   justify-content: center;
   gap: 0.5rem;
   font-size: 1.1rem;
-  color: #cbd5e1;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  width: fit-content;
+  margin: 0 auto;
+  backdrop-filter: blur(8px);
 }
 
 .page-breadcrumb a {
-  color: var(--primary);
+  color: #fff;
   font-weight: 600;
 }
 
 .page-breadcrumb a:hover {
-  text-decoration: underline;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--secondary);
+  margin-bottom: 1rem;
 }
 
 .section-subtitle {
@@ -37,17 +56,21 @@
 }
 
 .highlight { color: var(--primary); }
-
 .mb-5 { margin-bottom: 3rem; }
 
 /* ── Search & Filter ────────────────────────────── */
 .search-filter-bar {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  margin-top: -4.5rem; /* Overlap the header */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2;
 }
 
 .search-input-wrapper {
@@ -58,79 +81,89 @@
 
 .search-icon {
   position: absolute;
-  right: 1rem;
-  color: var(--text-muted);
+  right: 1.2rem;
+  color: var(--primary);
   pointer-events: none;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.9rem 3rem 0.9rem 3rem;
-  border: 2px solid var(--border-color);
+  padding: 1.2rem 3.5rem 1.2rem 1.2rem;
+  border: 2px solid transparent;
   border-radius: 50px;
   font-family: 'Cairo', sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--text-main);
-  background: var(--background);
-  transition: var(--transition);
+  background: rgba(241, 245, 249, 0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .search-input:focus {
   outline: none;
+  background: white;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15), inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .search-clear {
   position: absolute;
-  left: 1rem;
-  background: none;
+  left: 1.2rem;
+  background: var(--background-alt);
   color: var(--text-muted);
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   border-radius: 50%;
   transition: var(--transition);
 }
 
 .search-clear:hover {
-  color: var(--primary);
-  background: rgba(245,158,11,0.1);
+  color: white;
+  background: #ef4444;
+  transform: scale(1.1) rotate(90deg);
 }
 
 .results-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--border-color);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .results-count {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--secondary);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  background: rgba(30, 58, 138, 0.05);
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
 }
 
 .clear-filters-btn {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  background: none;
-  color: var(--text-muted);
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   font-family: 'Cairo', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .clear-filters-btn:hover {
-  color: var(--primary);
-  background: rgba(245,158,11,0.08);
+  color: #ef4444;
+  border-color: #ef4444;
+  background: #fef2f2;
 }
 
 /* ── Governorate Tabs ───────────────────────────── */
@@ -138,13 +171,22 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2.5rem;
-  overflow: hidden;
+  margin-bottom: 3rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 100px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 .filter-label-icon {
-  color: var(--primary);
+  color: var(--secondary);
   flex-shrink: 0;
+  margin-right: 0.5rem;
+  background: var(--background-alt);
+  padding: 8px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
 }
 
 .gov-tabs-scroll {
@@ -152,86 +194,111 @@
   gap: 0.5rem;
   overflow-x: auto;
   padding-bottom: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-
 .gov-tabs-scroll::-webkit-scrollbar {
-  height: 4px;
-}
-.gov-tabs-scroll::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
+  display: none;
 }
 
 .gov-tab {
   white-space: nowrap;
-  padding: 0.5rem 1.1rem;
-  border: 2px solid var(--border-color);
+  padding: 0.6rem 1.4rem;
+  border: 2px solid transparent;
   border-radius: 50px;
-  background: white;
-  color: var(--text-muted);
+  background: var(--background-alt);
+  color: var(--text-main);
   font-family: 'Cairo', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gov-tab:hover {
-  border-color: var(--primary);
+  background: rgba(245, 158, 11, 0.1);
   color: var(--primary);
+  transform: translateY(-2px);
 }
 
 .gov-tab.active {
   background: var(--primary);
-  border-color: var(--primary);
   color: white;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+  transform: translateY(-2px);
 }
 
 /* ── Governorate Cards ──────────────────────────── */
 .governorates-list {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 3rem;
 }
 
 .governorate-card {
-  background-color: var(--surface);
-  border-radius: var(--border-radius);
-  padding: 2rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.governorate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px 0 0 4px; /* rtl support */
+}
+
+.governorate-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 .governorate-title {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 1rem;
   color: var(--secondary);
-  font-size: 1.4rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--border-color);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--border-color);
 }
 
-.gov-icon { color: var(--primary); }
+.gov-icon { 
+  color: white; 
+  background: var(--secondary);
+  padding: 8px;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
+}
 
 .gov-area-count {
   margin-right: auto;
-  font-size: 0.8rem;
-  background: rgba(245,158,11,0.12);
-  color: var(--primary);
-  padding: 3px 10px;
+  font-size: 0.9rem;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--primary-hover);
+  padding: 6px 14px;
   border-radius: 50px;
-  font-weight: 700;
+  font-weight: 800;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .areas-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -245,39 +312,59 @@
 .area-link {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  color: var(--text-muted);
-  font-size: 1rem;
-  padding: 0.45rem 0.6rem;
-  border-radius: 8px;
-  transition: var(--transition);
+  gap: 0.5rem;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: var(--background-alt);
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .area-link:hover {
+  color: var(--secondary);
+  background-color: white;
+  border-color: rgba(30, 58, 138, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateX(-5px); /* Note: in RTL, this might move it left. Let's make it more visually distinct */
+}
+
+.area-link svg {
   color: var(--primary);
-  background-color: rgba(245, 158, 11, 0.07);
-  transform: translateX(-5px);
+  transition: transform 0.3s ease;
+}
+
+.area-link:hover svg {
+  transform: translateX(-3px);
 }
 
 /* ── No Results ─────────────────────────────────── */
 .no-results {
   text-align: center;
-  padding: 5rem 2rem;
-  color: var(--text-muted);
+  padding: 6rem 2rem;
+  background: white;
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px dashed var(--border-color);
 }
 
 .no-results svg {
-  color: var(--border-color);
+  color: var(--text-muted);
   margin: 0 auto 1.5rem;
+  opacity: 0.5;
 }
 
 .no-results h3 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--text-main);
   margin-bottom: 0.5rem;
+  font-weight: 800;
 }
 
 .no-results p {
   font-size: 1.1rem;
+  color: var(--text-muted);
   margin-bottom: 2rem;
 }
