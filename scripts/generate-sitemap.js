@@ -42,7 +42,23 @@ async function fetchArticleSlugs() {
       }
     }
   } catch (err) {
-    console.log('Sitemap build: Could not fetch dynamic articles from API (offline or timeout). Proceeding with core + area routes.');
+    console.log('Sitemap build: Could not fetch dynamic articles from API (offline or timeout). Trying local fallback.');
+  }
+  // Fallback: optional local list (scripts/articles-fallback.json) so /articles/* never drops offline
+  try {
+    const fallbackPath = path.join(__dirname, 'articles-fallback.json');
+    if (fs.existsSync(fallbackPath)) {
+      const raw = fs.readFileSync(fallbackPath, 'utf8');
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) {
+        console.log(`Sitemap build: using ${list.length} fallback article slugs from articles-fallback.json`);
+        return list.map(slug => slugify(decodeURIComponent(String(slug)).replace(/[|:?*<>]/g, ''))).filter(Boolean);
+      }
+    } else {
+      console.log('Sitemap build: no local articles fallback found (scripts/articles-fallback.json). Proceeding with core + area routes.');
+    }
+  } catch (err) {
+    console.log('Sitemap build: fallback articles unreadable, proceeding with core + area routes.');
   }
   return [];
 }
@@ -76,14 +92,25 @@ async function buildSitemap() {
   }
 
   xml += `\n  <!-- Dynamic Location Landing Pages -->\n`;
+  const hubSlugs = new Set(["ونش-انقاذ-السويس", "ونش-انقاذ-العين-السخنة", "ونش-انقاذ-الجلالة", "ونش-انقاذ-بورتو-السخنة", "ونش-انقاذ-الزعفرانة", "ونش-انقاذ-بور-توفيق"]);
+  const fmtDate = (d) => d.toISOString().split('T')[0];
+  const now = new Date();
+  const hubDate = fmtDate(now);
+  const districtDate = fmtDate(new Date(now.getTime() - 24 * 3600 * 1000));
+  const roadDate = fmtDate(new Date(now.getTime() - 2 * 24 * 3600 * 1000));
   for (const area of allAreas) {
     const slug = slugify(area.slug || area.name);
     if (!slug) continue;
+    const isHub = hubSlugs.has(area.slug);
+    const isHighway = area.region === "الطرق والمحاور السريعة";
+    const priority = isHub ? "0.8" : isHighway ? "0.5" : "0.6";
+    const changefreq = isHub ? "weekly" : "monthly";
+    const lastmod = isHub ? hubDate : isHighway ? roadDate : districtDate;
     xml += `  <url>
     <loc>${baseUrl}/winch/${encodeURIComponent(slug)}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
     <image:image>
       <image:loc>${baseUrl}/${area.heroImage || 'images/10.webp'}</image:loc>
       <image:title>ونش انقاذ ${area.name}</image:title>
@@ -122,7 +149,6 @@ async function buildSitemap() {
 Allow: /
 
 Sitemap: ${baseUrl}/sitemap.xml
-Host: www.winchelsokhna.com
 `;
   fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsTxt);
   if (fs.existsSync(buildDir)) {

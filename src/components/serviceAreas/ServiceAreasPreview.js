@@ -5,8 +5,24 @@ import { areas } from '../../data/areas';
 import './ServiceAreasPreview.css';
 
 const ServiceAreasPreview = () => {
-  // Show only top 8 areas for the preview
-  const topAreas = areas.slice(0, 8);
+  // Curate top representative areas for the homepage preview
+  const featuredNames = [
+    "العين السخنة",
+    "السويس",
+    "بورتو السخنة",
+    "الجلالة",
+    "طريق السخنة",
+    "بور توفيق",
+    "الزعفرانة",
+    "راس سدر",
+    "طريق القاهرة السويس"
+  ];
+  const topAreas = featuredNames
+    .map(name => areas.find(a => a.name === name))
+    .filter(Boolean);
+  if (topAreas.length < 8) {
+    topAreas.push(...areas.slice(0, 8 - topAreas.length));
+  }
   return (
     <section className="service-areas-preview section bg-light">
       <div className="container">

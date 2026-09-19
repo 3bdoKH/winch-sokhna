@@ -39,7 +39,7 @@ const Home = () => {
               "name": "ونش انقاذ العين السخنة",
               "url": "https://www.winchelsokhna.com",
               "logo": "https://www.winchelsokhna.com/images/10.webp",
-              "telephone": "01143433875"
+              "telephone": "+201143433875"
             },
             {
               "@type": ["EmergencyService", "AutomotiveBusiness"],
@@ -56,7 +56,7 @@ const Home = () => {
                 "ونش انقاذ العين السخنة"
               ],
               "url": "https://www.winchelsokhna.com",
-              "telephone": "01143433875",
+              "telephone": "+201143433875",
               "priceRange": "$$",
               "image": "https://www.winchelsokhna.com/images/10.webp",
               "address": {
@@ -79,11 +79,14 @@ const Home = () => {
               },
               "areaServed": [
                 { "@type": "AdministrativeArea", "name": "العين السخنة" },
+                { "@type": "AdministrativeArea", "name": "السويس" },
+                { "@type": "AdministrativeArea", "name": "الجلالة" },
+                { "@type": "AdministrativeArea", "name": "الزعفرانة" },
+                { "@type": "AdministrativeArea", "name": "بور توفيق" },
+                { "@type": "AdministrativeArea", "name": "بورتو السخنة" },
                 { "@type": "AdministrativeArea", "name": "طريق العين السخنة" },
                 { "@type": "AdministrativeArea", "name": "طريق الجلالة" },
-                { "@type": "AdministrativeArea", "name": "طريق الزعفرانة" },
-                { "@type": "AdministrativeArea", "name": "بورتو السخنة" },
-                { "@type": "AdministrativeArea", "name": "السويس" }
+                { "@type": "AdministrativeArea", "name": "طريق الزعفرانة" }
               ],
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
