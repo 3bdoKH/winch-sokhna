@@ -1,4 +1,5 @@
 import { customAreaContent as sokhnaSpecifics } from './sokhnaContent.js';
+import { normalizeArabic } from '../utils/slugify.js';
 
 // Deterministic string hasher to seed unique combinations per area
 const hashString = (str = '') => {
@@ -85,6 +86,18 @@ const regionProfiles = {
       { cause: "أعطال السفر الطويل للسيارات العائلية والدفع الرباعي", tip: "نقدم خدمة نقل وسحب لمسافات طويلة بين المحافظات بتأمين شامل وأفضل سعر." }
     ]
   },
+  "طريق السخنة الزعفرانة والبحر الأحمر": {
+    type: "coastal_highway",
+    focus: "طريق السخنة الزعفرانة الساحلي ومناطق طواحين الهواء ومداخل قرى البحر الأحمر",
+    responseTime: "30 إلى 45 دقيقة",
+    landmarks: "طريق السخنة-الزعفرانة، مزارع طواحين الهواء، كمين الزعفرانة، ومخرج دير الأنبا أنطونيوس",
+    roadAdvice: "توقف تماماً على كتف الطريق الأيمن بعيداً عن مسار السيارات السريعة، وأشعل إشارات الانتظار (الفلاشر)، وأرسل موقعك الجغرافي (Live Location) عبر الواتساب لتصلك أقرب وحدة إنقاذ مجهزة.",
+    commonIssues: [
+      { cause: "نفاد الوقود على المسافات الساحلية الطويلة", tip: "نرسل سيارة دعم طارئ مزودة بالوقود الكافي لتوصيلك إلى أقرب محطة خدمة بأمان." },
+      { cause: "ارتفاع حرارة المحرك مع سرعات السفر والرياح الساحلية", tip: "توقف في مكان آمن واترك المحرك ليبرد؛ سياراتنا مجهزة بمياه تبريد وفحص سريع." },
+      { cause: "ثقب الإطارات على المسافات المتباعدة عن الورش", tip: "نوفر أوناشاً مجهزة بمعدات تبديل وإصلاح الإطارات وسحب السيارات لأقرب نقطة صيانة متخصصة." }
+    ]
+  },
   "محاور القاهرة الكبرى": {
     type: "metropolitan_highway",
     focus: "المحاور الشرقية للقاهرة الكبرى والرابطة بطريق السويس والسخنة",
@@ -114,16 +127,16 @@ const whyUsPhrasings = [
 ];
 
 const subtitleTemplates = [
-  (area, profile) => `خصم 50% - أسرع ونش إنقاذ سيارات في ${area} يصلك خلال ${profile.responseTime}. اتصل الآن 01143433875 لخدمة سحب آمنة 24/7.`,
-  (area, profile) => `خصم 50% - هل تعطلت سيارتك في ${area}؟ اطلب أقرب ونش سيارات هيدروليكي مجهز عبر 01143433875 نصلك في ${profile.responseTime}.`,
-  (area, profile) => `خصم 50% - ونش إنقاذ ${area} 24 ساعة | سطحات مسطحة لنقل السيارات بدون أي خدش. اتصل بنا فوراً على 01143433875.`,
-  (area, profile) => `خصم 50% - رقم ونش انقاذ ${area} المباشر 01143433875 | خدمة طوارئ سريعة ومساعدة على الطريق بأرخص سعر.`
+  (area, profile) => `أسرع ونش إنقاذ سيارات في ${area} يصلك خلال ${profile.responseTime}. اتصل الآن 01143433875 لخدمة سحب آمنة 24/7.`,
+  (area, profile) => `هل تعطلت سيارتك في ${area}؟ اطلب أقرب ونش سيارات هيدروليكي مجهز عبر 01143433875 نصلك في ${profile.responseTime}.`,
+  (area, profile) => `ونش إنقاذ ${area} 24 ساعة | سطحات مسطحة لنقل السيارات بدون أي خدش. اتصل بنا فوراً على 01143433875.`,
+  (area, profile) => `رقم ونش انقاذ ${area} المباشر 01143433875 | خدمة طوارئ سريعة ومساعدة على الطريق بأرخص سعر.`
 ];
 
 const metaDescriptionTemplates = [
-  (area, region, profile) => `خصم 50% - اتصل برقم ونش انقاذ ${area} 01143433875. أسرع وأرخص ونش سيارات 24 ساعة في ${area} و${region}. سطحات هيدروليكية حديثة ووصول في ${profile.responseTime}.`,
-  (area, region, profile) => `رقم ونش انقاذ سيارات في ${area} ${region}: 01143433875. خدمة سحب ونقل سيارات معطلة وحوادث 24/7 مع خصم 50%. وصول سريع خلال ${profile.responseTime}.`,
-  (area, region, profile) => `أسرع ونش انقاذ في ${area} بخصم 50% | اتصل الآن 01143433875. سطحات لنقل السيارات الملاكي والرياضية بأمان تام في ${area} و${region}.`,
+  (area, region, profile) => `اتصل برقم ونش انقاذ ${area} 01143433875. أسرع وأرخص ونش سيارات 24 ساعة في ${area} و${region}. سطحات هيدروليكية حديثة ووصول في ${profile.responseTime}.`,
+  (area, region, profile) => `رقم ونش انقاذ سيارات في ${area} ${region}: 01143433875. خدمة سحب ونقل سيارات معطلة وحوادث 24/7 مع خصم حصري. وصول سريع خلال ${profile.responseTime}.`,
+  (area, region, profile) => `أسرع ونش انقاذ في ${area} | اتصل الآن 01143433875. سطحات لنقل السيارات الملاكي والرياضية بأمان تام في ${area} و${region}.`,
   (area, region, profile) => `ونش سيارات ${area} 24 ساعة - اتصل على 01143433875. خدمة إنقاذ سيارات احترافية ومساعدة على الطريق في ${area} و${region} بأقل سعر.`
 ];
 
@@ -136,11 +149,17 @@ export const getAreaCustomData = (areaName, governorateName) => {
   const profile = regionProfiles[regionKey] || regionProfiles["مدينة السويس وأحيائها"];
 
   // Check if there is a manual override in sokhnaContent specifically for this exact area
-  if (sokhnaSpecifics[areaName]) {
-    const item = sokhnaSpecifics[areaName];
+  const matchedItem = sokhnaSpecifics[areaName] 
+    || (areaName === 'بورتوفيق' ? sokhnaSpecifics['بور توفيق'] : null)
+    || (areaName === 'الزعفرانه' ? sokhnaSpecifics['الزعفرانة'] : null)
+    || Object.entries(sokhnaSpecifics).find(([k]) => normalizeArabic(k) === normalizeArabic(areaName))?.[1];
+
+  if (matchedItem) {
+    const item = matchedItem;
     // Area-specific response times override region default (honest times for far areas)
     const timeOverrides = {
       'الزعفرانة': '30 إلى 45 دقيقة',
+      'الزعفرانه': '30 إلى 45 دقيقة',
       'الجلالة': '15 إلى 20 دقيقة',
       'جبل الجلالة': '15 إلى 20 دقيقة',
       'هضبة الجلالة': '15 إلى 20 دقيقة',
@@ -149,8 +168,10 @@ export const getAreaCustomData = (areaName, governorateName) => {
     // Per-area road tips: coastal-night vs mountain vs port-urban vs urban hub
     const areaRoadTips = {
       'الزعفرانة': 'قف تماما على كتف الطريق الأيمن بعيدا عن الحارة السريعة، شغل الفلاشر، وأرسل Live Location عبر الواتساب مع أقرب علامة لطواحين الهواء على طريق السخنة-الزعفرانة، وابتعد عن السيارة جهة البحر حتى وصول الدعم.',
+      'الزعفرانه': 'قف تماما على كتف الطريق الأيمن بعيدا عن الحارة السريعة، شغل الفلاشر، وأرسل Live Location عبر الواتساب مع أقرب علامة لطواحين الهواء على طريق السخنة-الزعفرانة، وابتعد عن السيارة جهة البحر حتى وصول الدعم.',
       'الجلالة': 'استخدم فرامل اليد مع وضع غيار الأمان لتثبيت السيارة على المنحدرات، وتجنب الوقوف في المنحنيات الضيقة، ولا تحاول النزول مشيا على المرتفعات — انتظر ونش الجلالة المجهز بكابلات ثقيلة.',
       'بور توفيق': 'توقف قرب بوابات الميناء أو الكورنيش في مكان لا يعطل حركة الشاحنات، وأبلغنا برقم البوابة الأقرب واتجاه الكورنيش لتوجيه ونش بور توفيق من أسرع مسار.',
+      'بورتوفيق': 'توقف قرب بوابات الميناء أو الكورنيش في مكان لا يعطل حركة الشاحنات، وأبلغنا برقم البوابة الأقرب واتجاه الكورنيش لتوجيه ونش بور توفيق من أسرع مسار.',
       'السويس': 'توقف في أقصى اليمين داخل أحياء الكورنيش أو الأربعين أو فيصل، وأشعل الفلاشر وضع مثلث التحذير، وأرسل اسم الشارع وأقرب ميدان لتوجيه ونش السويس.',
     };
     const roadTip = areaRoadTips[areaName] || profile.roadAdvice;

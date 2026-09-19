@@ -54,6 +54,11 @@ export const stripCommonPrefixes = (text = '') => {
   for (const p of prefixes) {
     if (s.startsWith(p + ' ')) {
       s = s.slice(p.length + 1).trim();
+    } else if (s.startsWith(p)) {
+      const rem = s.slice(p.length).trim();
+      if (rem.length >= 3) {
+        s = rem;
+      }
     }
   }
   return s;
@@ -110,9 +115,25 @@ export const findAreaByFuzzySlug = (rawSlug, areasList) => {
     }
   }
 
+  // 3.5 Space-collapsed match (crucial for compound names like بورتوفيق vs بور توفيق)
+  const normNoSpace = norm.replace(/\s+/g, '');
+  const coreNoSpace = core.replace(/\s+/g, '');
+  for (const a of areasList) {
+    const aNormNoSpace = normalizeArabic(a.name).replace(/\s+/g, '');
+    const aSlugNoSpace = normalizeArabic(a.slug).replace(/[-\s]+/g, '');
+    if (aNormNoSpace === normNoSpace || aSlugNoSpace === normNoSpace) {
+      return a;
+    }
+    if (coreNoSpace && coreNoSpace.length >= 3) {
+      if (aNormNoSpace === coreNoSpace || aSlugNoSpace === coreNoSpace) {
+        return a;
+      }
+    }
+  }
+
   // 4. Exact match with keywords (normalized)
   for (const a of areasList) {
-    if (a.keywords && a.keywords.some(k => normalizeArabic(k) === norm)) {
+    if (a.keywords && a.keywords.some(k => normalizeArabic(k) === norm || normalizeArabic(k).replace(/\s+/g, '') === normNoSpace)) {
       return a;
     }
   }

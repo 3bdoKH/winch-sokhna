@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Phone, Clock, ShieldCheck, Zap, MapPin, 
@@ -99,7 +99,31 @@ const WinchLocationSEO = () => {
   }, [slug]);
 
   if (!isValidArea) {
-    return <Navigate to="/" replace />;
+    return (
+      <div className="container" style={{ padding: '80px 20px', textAlign: 'center', minHeight: '60vh' }}>
+        <Helmet>
+          <title>المنطقة غير مسجلة | ونش إنقاذ السخنة</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <AlertTriangle size={64} style={{ color: '#ef4444', marginBottom: '20px' }} />
+        <h1 style={{ fontSize: '1.8rem', marginBottom: '15px' }}>عذراً، هذه المنطقة غير مسجلة حالياً</h1>
+        <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto 25px auto', fontSize: '1.1rem' }}>
+          الصفحة المطلوبة غير متوفرة أو تم تحديث مسارها. فرق الإنقاذ لدينا تغطي كافة قطاعات السويس والسخنة وطريق البحر الأحمر على مدار 24 ساعة.
+        </p>
+        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${primaryPhone}`} className="seo-btn-primary" style={{ textDecoration: 'none' }}>
+            <Phone size={20} />
+            <span>طلب ونش طوارئ فوراً ({primaryPhone})</span>
+          </a>
+          <Link to="/areas" className="seo-btn-primary" style={{ textDecoration: 'none', backgroundColor: '#1e293b' }}>
+            <span>تصفح جميع مناطق التغطية</span>
+          </Link>
+          <Link to="/" className="seo-btn-primary" style={{ textDecoration: 'none', backgroundColor: '#475569' }}>
+            <span>العودة للرئيسية</span>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const isSokhna = areaName.includes("السخنة") || areaName.includes("السخنه") || governorate === "السويس" || governorate === "العين السخنة ومنتجعاتها";
@@ -109,7 +133,7 @@ const WinchLocationSEO = () => {
   // Each target area gets a landmark-based title to avoid doorway duplication
   const titleLandmarks = {
     'السويس': 'الكورنيش والأربعين وفيصل',
-    'الزعفرانة': 'طريق السخنة-الزعفرانة',
+    'الزعفرانة': 'طريق السخنة الزعفرانة والبحر الأحمر',
     'الجلالة': 'المرتفعات والمنحنيات',
     'بور توفيق': 'الميناء والكورنيش',
     'العين السخنة': 'القرى والبوابات',
@@ -118,7 +142,15 @@ const WinchLocationSEO = () => {
     'طريق القاهرة السويس': 'الصحراوي السريع',
   };
   const titleLandmark = titleLandmarks[areaName] || governorate;
-  const title = `ونش انقاذ ${areaName} 24 ساعة | ${titleLandmark} | ونش السخنة`;
+  let title = `ونش انقاذ ${areaName} 24 ساعة | ${titleLandmark} | ونش السخنة`;
+  if (areaName === 'السويس') {
+    title = 'ونش انقاذ السويس 24 ساعة | خدمة سريعة داخل أحياء السويس والكورنيش';
+  } else if (areaName === 'بور توفيق') {
+    title = 'ونش انقاذ بور توفيق 24 ساعة | خدمة سريعة بمنطقة الميناء والكورنيش';
+  } else if (areaName === 'الزعفرانة') {
+    title = 'ونش انقاذ الزعفرانة 24 ساعة | طريق السخنة الزعفرانة والبحر الأحمر';
+  }
+
   // Honest per-area response times (far/coastal/mountain areas must not promise 10 min)
   const honestTimes = {
     'الزعفرانة': '30 إلى 45 دقيقة',
@@ -160,7 +192,7 @@ const WinchLocationSEO = () => {
     ? `https://www.winchelsokhna.com/${currentArea.heroImage.replace(/^\/+/, '')}`
     : defaultImage;
 
-  // 2. Comprehensive Structured Data (JSON-LD) — SAB: no street address, no reviews
+  // 2. Comprehensive Structured Data (JSON-LD) — SAB compliant
   const e164Phone = `+20${primaryPhone.replace(/^0/, '')}`;
   const priceTiers = {
     'الزعفرانة': { min: '600', max: '900' },
@@ -182,6 +214,12 @@ const WinchLocationSEO = () => {
         "@type": ["EmergencyService", "AutomotiveBusiness"],
         "@id": canonicalUrl,
         "name": `ونش انقاذ ${areaName}`,
+        "parentOrganization": {
+          "@type": "Organization",
+          "@id": "https://www.winchelsokhna.com/#organization",
+          "name": "ونش السخنة",
+          "url": "https://www.winchelsokhna.com/"
+        },
         "alternateName": dynamicKeywords.length > 0 ? dynamicKeywords : [
           `ونش انقاذ ${areaName}`,
           `ونش ${areaName}`
@@ -190,10 +228,16 @@ const WinchLocationSEO = () => {
         "url": canonicalUrl,
         "telephone": e164Phone,
         "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": areaName,
+          "addressRegion": governorate.includes("البحر الأحمر") ? "البحر الأحمر" : "السويس",
+          "addressCountry": "EG"
+        },
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": currentArea?.lat || (isSokhna ? "29.6105" : "30.0444"),
-          "longitude": currentArea?.lng || (isSokhna ? "32.3486" : "31.2357")
+          "latitude": currentArea?.lat ? String(currentArea.lat) : (isSokhna ? "29.6105" : "30.0444"),
+          "longitude": currentArea?.lng ? String(currentArea.lng) : (isSokhna ? "32.3486" : "31.2357")
         },
         "description": description,
         "openingHoursSpecification": {
@@ -211,10 +255,10 @@ const WinchLocationSEO = () => {
             "@type": "GeoCircle",
             "geoMidpoint": {
               "@type": "GeoCoordinates",
-              "latitude": currentArea?.lat || "29.6105",
-              "longitude": currentArea?.lng || "32.3486"
+              "latitude": currentArea?.lat ? String(currentArea.lat) : "29.6105",
+              "longitude": currentArea?.lng ? String(currentArea.lng) : "32.3486"
             },
-            "geoRadius": areaName === "الزعفرانة" ? "40000" : "20000"
+            "geoRadius": areaName === "الزعفرانة" ? "50000" : (areaName === "السويس" || areaName === "بور توفيق") ? "25000" : "20000"
           }
         ],
         "hasOfferCatalog": {
@@ -409,36 +453,36 @@ const WinchLocationSEO = () => {
           <div className="seo-content-grid">
             
             <article className="seo-article">
-              <h2>رقم ونش انقاذ سيارات في {areaName}: {primaryPhone}</h2>
+              <h2>رقم الطوارئ المباشر لخدمة الإنقاذ في {areaName}: {primaryPhone}</h2>
               <p>{customData.intro}</p>
               <p>
                 إذا تعطلت سيارتك فجأة في {areaName} أو على أحد الطرق والمحاور الرئيسية في {governorate}، فلا داعي للقلق أو التوتر. بمجرد الاتصال على <strong>رقم ونش انقاذ {areaName} ({primaryPhone})</strong> أو <strong>({secondaryPhone})</strong>، يتحرك إليك فريق متخصص مزود بأحدث أوناش الإنقاذ الهيدروليكية والسطحات المسطحة لتقديم المساعدة الفورية بنسبة أمان 100%.
               </p>
 
-              <h3>لماذا نحن أفضل وأرخص ونش انقاذ في {areaName}؟</h3>
+              <h3>لماذا يعتمد السائقون على خدمتنا في {areaName}؟</h3>
               <p>{customData.whyUs}</p>
               <p>
                 نحن نتميز بالانتشار السريع والواسع، حيث نوفر نقاط تمركز متعددة لسيارات الإنقاذ بالقرب من {areaName} لضمان ألا تتجاوز مدة انتظارك {honestTime} بعد طلب الخدمة تلفونياً على الرقم <strong dir="ltr">{primaryPhone}</strong>.
               </p>
 
               {/* Offer Catalog / Services Grid */}
-              <h2>ميزات وخدمات ونش انقاذ سيارات {areaName}</h2>
+              <h2>ميزات خدمات سحب ونقل السيارات المتاحة</h2>
               <div className="seo-services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', margin: '25px 0' }}>
                 {servicesList.map((service, idx) => (
                   <div key={idx} className="service-card-seo" style={{ background: 'white', padding: '22px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', borderRight: '4px solid #ef4444' }}>
                     <div style={{ color: '#ef4444', marginBottom: '12px' }}>{service.icon}</div>
-                    <h4 style={{ margin: '0 0 8px 0', fontSize: '1.15rem', color: '#0f172a' }}>{service.title}</h4>
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.15rem', color: '#0f172a' }}>{service.title}</h3>
                     <p style={{ margin: 0, fontSize: '0.95rem', color: '#64748b' }}>{service.desc}</p>
                   </div>
                 ))}
               </div>
 
               {/* Local Road Tips */}
-              <h3>نصائح وإرشادات الطوارئ على طرق {governorate}</h3>
+              <h3>إرشادات السلامة والتعامل مع الأعطال في {governorate}</h3>
               <p>{customData.localRoadTips}</p>
 
               {/* Breakdown Causes */}
-              <h2>أكثر أسباب تعطل السيارات شيوعاً في {areaName} وكيف نتعامل معها</h2>
+              <h2>أسباب الأعطال الشائعة على الطريق وكيفية التعامل معها</h2>
               <p>
                 تتعدد أسباب الأعطال المفاجئة للسيارات في منطقة {areaName}، وفريقنا مدرب ومتخصص في التعامل مع جميع الحالات التالية:
               </p>
@@ -455,27 +499,27 @@ const WinchLocationSEO = () => {
               </div>
 
               {/* How It Works Procedure */}
-              <h2>كيف تطلب ونش إنقاذ سيارات في {areaName}؟</h2>
+              <h2>خطوات طلب المساعدة والإنقاذ السريع</h2>
               <p>خطوات طلب الخدمة بسيطة وسريعة ولا تستغرق أكثر من دقيقة واحدة:</p>
               <div className="seo-steps">
                 {howItWorks.map((step, idx) => (
                   <div key={idx} className="seo-step-card">
                     <div className="seo-step-num">{step.step}</div>
-                    <h4>{step.title}</h4>
+                    <h3>{step.title}</h3>
                     <p>{step.desc}</p>
                   </div>
                 ))}
               </div>
 
               {/* Price Transparency Section */}
-              <h2>أسعار ونش انقاذ سيارات {areaName} وتكلفة السحب</h2>
+              <h2>جدول وتكلفة سحب السيارات التقريبية</h2>
               <p>
                 نعتمد نظام تسعير شفاف حسب المسافة ونوع السيارة في {areaName} ({governorate})، مع <strong>خصم 50%</strong> عند الاتصال المباشر. السعر النهائي يحدد هاتفيا قبل التحرك حسب الكيلومترات — بدون رسوم مخفية.
               </p>
               <div className="price-info-box" style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '20px', borderRadius: '12px', margin: '20px 0' }}>
-                <h4 style={{ margin: '0 0 10px 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h3 style={{ margin: '0 0 10px 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <DollarSign style={{ color: '#22c55e' }} /> نطاق أسعار ونش الإنقاذ في {areaName}:
-                </h4>
+                </h3>
                 <ul style={{ margin: 0, paddingRight: '20px', color: '#475569', fontSize: '0.98rem', lineHeight: '1.8' }}>
                   <li><strong>سحب داخل {areaName} والقرى القريبة:</strong> {areaName === 'الزعفرانة' ? '600–900 جم بعد الخصم (مسافات ساحلية طويلة)' : areaName === 'الجلالة' || areaName === 'جبل الجلالة' ? '500–800 جم بعد الخصم (مرتفعات ومعدات ثقيلة)' : '300–600 جم بعد الخصم'}.</li>
                   <li><strong>النقل بين المحافظات (السخنة/السويس/القاهرة):</strong> يحسب بالكيلومتر مع تأمين كامل — نبلغك بالنطاق قبل التحرك.</li>
@@ -485,25 +529,25 @@ const WinchLocationSEO = () => {
               </div>
 
               {/* Quality Guarantees Section */}
-              <h2>معايير الأمان وجودة الخدمة في {areaName}</h2>
+              <h2>معايير الأمان وجودة أسطول الأوناش</h2>
               <p>نحرص على تطبيق أعلى معايير السلامة المهنية عند نقل أو سحب سيارتك في {areaName}:</p>
               <div className="seo-guarantees-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', margin: '25px 0' }}>
                 {qualityGuarantees.map((item, idx) => (
                   <div key={idx} style={{ background: '#ffffff', padding: '22px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', borderTop: '4px solid #ef4444' }}>
-                    <h4 style={{ color: '#0f172a', margin: '0 0 10px 0', fontSize: '1.1rem', fontWeight: 'bold' }}>{item.title}</h4>
+                    <h3 style={{ color: '#0f172a', margin: '0 0 10px 0', fontSize: '1.1rem', fontWeight: 'bold' }}>{item.title}</h3>
                     <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569', lineHeight: '1.7' }}>{item.desc}</p>
                   </div>
                 ))}
               </div>
 
               {/* FAQ Section */}
-              <h2>أسئلة شائعة عن ونش انقاذ {areaName}</h2>
+              <h2>الأسئلة الشائعة وإجاباتها</h2>
               <div className="seo-faqs">
                 {customData.faqs.map((faq, idx) => (
                   <div key={idx} className="seo-faq-item" style={{ marginBottom: '15px', background: '#f8fafc', padding: '18px', borderRadius: '10px', borderRight: '4px solid #0d6efd' }}>
-                    <h4 style={{ color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.05rem' }}>
+                    <h3 style={{ color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.05rem' }}>
                       <HelpCircle size={20} style={{ color: '#0d6efd' }} /> {faq.q}
-                    </h4>
+                    </h3>
                     <p style={{ margin: 0, color: '#475569', fontSize: '0.98rem' }}>{faq.a}</p>
                   </div>
                 ))}
@@ -512,7 +556,7 @@ const WinchLocationSEO = () => {
               {/* Internal Linking / Nearby Silo */}
               {nearbyAreaObjects.length > 0 && (
                 <div className="seo-internal-linking">
-                  <h2>مناطق قريبة نغطيها أيضاً في {governorate}</h2>
+                  <h2>تغطية المناطق المجاورة في {governorate}</h2>
                   <p>إذا كنت بالقرب من {areaName}، يمكننا الوصول إليك أيضاً في المناطق التالية في أسرع وقت:</p>
                   <div className="seo-links-grid">
                     {nearbyAreaObjects.map((areaObj, i) => (

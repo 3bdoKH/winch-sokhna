@@ -1,5 +1,6 @@
 import { areas } from '../src/data/areas.js';
 import { slugify, normalizeArabic } from '../src/utils/slugify.js';
+import { LEGACY_SLUG_REDIRECTS } from '../src/data/legacyRedirects.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,8 +15,13 @@ const addRule = (fromSlug, canonicalSlug) => {
   const cleanFrom = slugify(fromSlug);
   if (!cleanFrom || cleanFrom === slugify(canonicalSlug) || added.has(cleanFrom)) return;
   added.add(cleanFrom);
-  dynamicRules.push(`  RewriteRule ^winch/${cleanFrom}/?$ /winch/${encodeURIComponent(canonicalSlug)} [R=301,L]`);
+  dynamicRules.push(`  RewriteRule ^winch/${cleanFrom}/?$ /winch/${encodeURIComponent(canonicalSlug)} [R=301,L,NE]`);
 };
+
+// 0. Explicit Legacy & Consolidated Redirects
+for (const [legacyFrom, targetTo] of Object.entries(LEGACY_SLUG_REDIRECTS)) {
+  addRule(legacyFrom, targetTo);
+}
 
 // Generate spelling mistake & short-form variants for each area
 for (const a of areas) {
