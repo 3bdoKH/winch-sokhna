@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "node -e \"const fs=require('fs'); if(fs.existsSync('build')) fs.rmSync('build', {recursive: true, force: true});\" && node scripts/generate-sitemap.js && react-scripts build && node scripts/update_htaccess.js && node scripts/prerender.js",
+    "fetch-articles": "node scripts/fetch-articles-static.js",
+    "build": "node scripts/fetch-articles-static.js && node -e \"const fs=require('fs'); if(fs.existsSync('build')) fs.rmSync('build', {recursive: true, force: true});\" && node scripts/generate-sitemap.js && react-scripts build && node scripts/update_htaccess.js && node scripts/prerender.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lhci": "npx @lhci/cli autorun"
@@ -41,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "cheerio": "^1.2.0",
     "express": "^5.2.1",
     "puppeteer": "^25.3.0",
     "sharp": "^0.35.3"

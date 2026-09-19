@@ -26,46 +26,24 @@ async function getAreas() {
 const baseUrl = 'https://www.winchelsokhna.com';
 const today = new Date().toISOString().split('T')[0];
 
-async function fetchArticleSlugs() {
+function getStaticArticles() {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch('https://winchenqaz.com/api/articles', { signal: controller.signal });
-    clearTimeout(timeoutId);
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        return data
-          .map(a => a.slug)
-          .filter(Boolean)
-          .map(slug => slugify(decodeURIComponent(slug).replace(/[|:?*<>]/g, '')));
+    const articlesPath = path.join(__dirname, '../src/data/generated-articles.json');
+    if (fs.existsSync(articlesPath)) {
+      const articles = JSON.parse(fs.readFileSync(articlesPath, 'utf8'));
+      if (Array.isArray(articles)) {
+        return articles.filter(a => a.sitemapEligible !== false);
       }
     }
   } catch (err) {
-    console.log('Sitemap build: Could not fetch dynamic articles from API (offline or timeout). Trying local fallback.');
-  }
-  // Fallback: optional local list (scripts/articles-fallback.json) so /articles/* never drops offline
-  try {
-    const fallbackPath = path.join(__dirname, 'articles-fallback.json');
-    if (fs.existsSync(fallbackPath)) {
-      const raw = fs.readFileSync(fallbackPath, 'utf8');
-      const list = JSON.parse(raw);
-      if (Array.isArray(list)) {
-        console.log(`Sitemap build: using ${list.length} fallback article slugs from articles-fallback.json`);
-        return list.map(slug => slugify(decodeURIComponent(String(slug)).replace(/[|:?*<>]/g, ''))).filter(Boolean);
-      }
-    } else {
-      console.log('Sitemap build: no local articles fallback found (scripts/articles-fallback.json). Proceeding with core + area routes.');
-    }
-  } catch (err) {
-    console.log('Sitemap build: fallback articles unreadable, proceeding with core + area routes.');
+    console.warn('Could not read generated-articles.json for sitemap:', err.message);
   }
   return [];
 }
 
 async function buildSitemap() {
   const allAreas = await getAreas();
-  const articleSlugs = await fetchArticleSlugs();
+  const articles = getStaticArticles();
 
   const coreRoutes = [
     { url: '/', priority: '1.0', changefreq: 'weekly' },
@@ -118,14 +96,23 @@ async function buildSitemap() {
   </url>\n`;
   }
 
-  if (articleSlugs.length > 0) {
-    xml += `\n  <!-- Dynamic Articles -->\n`;
-    for (const slug of articleSlugs) {
+  if (articles.length > 0) {
+    xml += `\n  <!-- Curated Guides & Relevant Articles -->\n`;
+    for (const article of articles) {
+      const slug = slugify(decodeURIComponent(article.slug).replace(/[|:?*<>]/g, ''));
+      if (!slug) continue;
+      const lastmod = article.updatedAt ? article.updatedAt.split('T')[0] : (article.date ? article.date.split('T')[0] : today);
+      const imgPath = article.image ? (article.image.startsWith('http') ? article.image : `${baseUrl}${article.image.startsWith('/') ? article.image : `/${article.image}`}`) : `${baseUrl}/images/10.webp`;
+      const cleanTitle = (article.title || 'مقال ونش انقاذ').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       xml += `  <url>
     <loc>${baseUrl}/articles/${encodeURIComponent(slug)}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>${imgPath}</image:loc>
+      <image:title>${cleanTitle}</image:title>
+    </image:image>
   </url>\n`;
     }
   }
@@ -143,7 +130,7 @@ async function buildSitemap() {
     fs.writeFileSync(path.join(buildDir, 'sitemap.xml'), xml);
   }
 
-  console.log(`Generated sitemap.xml with ${coreRoutes.length + allAreas.length + articleSlugs.length} URLs`);
+  console.log(`Generated sitemap.xml with ${coreRoutes.length + allAreas.length + articles.length} URLs`);
 
   const robotsTxt = `User-agent: *
 Allow: /

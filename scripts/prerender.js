@@ -35,6 +35,39 @@ const extractUrlsFromSitemap = () => {
   return urls;
 };
 
+/**
+ * Sanitize pre-rendered HTML to remove duplicate meta tags.
+ * React Helmet injects page-specific tags, but the original index.html
+ * may still have leftover tags. This keeps the LAST occurrence of each
+ * (which is the Helmet-injected one) and removes earlier duplicates.
+ */
+function sanitizeHtml(html) {
+  const duplicateTags = [
+    { regex: /<title>[^<]*<\/title>/gi },
+    { regex: /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<link\s+[^>]*rel="canonical"[^>]*\/?>/gi },
+    { regex: /<meta\s+name="robots"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/gi },
+    { regex: /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/gi }
+  ];
+
+  for (const item of duplicateTags) {
+    const matches = html.match(item.regex);
+    if (matches && matches.length > 1) {
+      for (let i = 0; i < matches.length - 1; i++) {
+        html = html.replace(matches[i], '');
+      }
+    }
+  }
+
+  return html;
+}
+
 const run = async () => {
   if (!fs.existsSync(buildDir)) {
     console.error('Build directory does not exist. Please run react-scripts build first.');
@@ -85,22 +118,35 @@ const run = async () => {
         }
       });
 
+      let idx = 0;
       for (const urlPath of urlsToPrerender) {
+        idx++;
         try {
           const url = `http://localhost:${PORT}${urlPath}`;
-          await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
           
           // Wait for main content or header to mount properly
-          await page.waitForSelector('h1, .seo-hero, .hero, .page-header, .seo-article', { timeout: 10000 }).catch(() => {});
+          await page.waitForSelector('h1, .article-details-page, .seo-hero, .hero, .page-header, .seo-article', { timeout: 8000 }).catch(() => {});
           
-          // Short delay for react-helmet-async head injection to settle
-          await new Promise(resolve => setTimeout(resolve, 800));
+          // Ensure Suspense loading fallback is gone
+          await page.waitForFunction(() => !document.body.innerText.includes('جاري التحميل...'), { timeout: 5000 }).catch(() => {});
 
-          const html = await page.content();
-          const decodedPath = decodeURIComponent(urlPath).replace(/[|:?*<>]/g, '');
+          // Short delay for react-helmet-async head injection to settle
+          await new Promise(resolve => setTimeout(resolve, 400));
+
+          const pageTitle = await page.evaluate(() => document.title);
+          let html = await page.content();
+
+          // Deduplicate meta and title tags
+          html = sanitizeHtml(html);
+          if (pageTitle) {
+            html = html.replace(/<title>[^<]*<\/title>/, `<title>${pageTitle}</title>`);
+          }
+
+          const decodedPath = decodeURIComponent(urlPath).trim().replace(/[|:*?"<>]/g, '');
           let dirPath = path.join(buildDir, decodedPath);
           
-          if (decodedPath === '/') {
+          if (decodedPath === '/' || !decodedPath) {
             dirPath = buildDir;
           }
           
@@ -110,8 +156,12 @@ const run = async () => {
 
           const targetFilePath = path.join(dirPath, 'index.html');
           fs.writeFileSync(targetFilePath, html);
+
+          if (idx % 20 === 0 || idx === urlsToPrerender.length) {
+            console.log(`[${idx}/${urlsToPrerender.length}] Prerendered: ${urlPath}`);
+          }
         } catch (err) {
-          console.error(`Failed to prerender ${urlPath}:`, err.message);
+          console.error(`[${idx}/${urlsToPrerender.length}] Failed to prerender ${urlPath}:`, err.message);
         }
       }
       console.log('Prerendering completed successfully.');

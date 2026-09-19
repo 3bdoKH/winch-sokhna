@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
@@ -11,7 +11,7 @@ import { areas } from '../../data/areas';
 import { slugify, findAreaByFuzzySlug } from '../../utils/slugify';
 import { getAreaCustomData } from '../../data/areaCustomContent';
 import { LEGACY_SLUG_REDIRECTS } from '../../data/legacyRedirects';
-import { articlesAPI } from '../../api/articlesApi';
+import { getRecentArticles } from '../../data/articlesIndex';
 import './WinchLocationSEO.css';
 
 const areaGalleryMap = {
@@ -30,19 +30,7 @@ const WinchLocationSEO = () => {
   const { location: slug } = useParams();
   const navigate = useNavigate();
 
-  const [recentArticles, setRecentArticles] = useState([]);
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const data = await articlesAPI.getAll();
-        setRecentArticles(data.slice(0, 3));
-      } catch (err) {
-        console.error('Error fetching articles', err);
-      }
-    };
-    fetchArticles();
-  }, []);
+  const recentArticles = useMemo(() => getRecentArticles(3), []);
 
   // Resolve slug to the canonical Area object with fuzzy spelling error tolerance
   const currentArea = useMemo(() => {
@@ -628,7 +616,7 @@ const WinchLocationSEO = () => {
                     {recentArticles.map((article) => (
                       <Link key={article.id} to={`/articles/${article.slug}`} className="sidebar-article-card">
                         {article.image && (
-                          <img src={`https://winchenqaz.com${article.image}`} alt={article.title} loading="lazy" />
+                          <img src={article.image.startsWith('http') ? article.image : article.image} alt={article.title} loading="lazy" />
                         )}
                         <div className="sidebar-article-info">
                           <h4>{article.title}</h4>

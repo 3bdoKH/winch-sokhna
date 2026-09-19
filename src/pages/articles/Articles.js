@@ -1,31 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Loader2, Calendar, Clock, User } from 'lucide-react';
-import { articlesAPI } from '../../api/articlesApi';
+import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
+import { allArticlesIndex } from '../../data/articlesIndex';
 import SEO from '../../components/seo/SEO';
 import { cleanText as cleanPhone } from '../../utils/cleanText';
 import './Articles.css';
 
 const Articles = () => {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const articles = allArticlesIndex.filter(a => a.sitemapEligible !== false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const fetchArticles = async () => {
-      try {
-        const data = await articlesAPI.getAll();
-        setArticles(data);
-      } catch (err) {
-        console.error('Error fetching articles', err);
-        setError('حدث خطأ أثناء تحميل المقالات. يرجى المحاولة لاحقاً.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchArticles();
   }, []);
 
   const formatDate = (dateString) => {
@@ -77,23 +62,13 @@ const Articles = () => {
             </p>
           </div>
 
-          {loading ? (
-            <div className="articles-loader">
-              <Loader2 size={60} className="spinner-icon" />
-              <p>جاري تحميل المقالات...</p>
-            </div>
-          ) : error ? (
-            <div className="articles-error">
-              <p>{error}</p>
-              <button className="btn-primary" onClick={() => window.location.reload()}>تحديث الصفحة</button>
-            </div>
-          ) : articles.length > 0 ? (
+          {articles.length > 0 ? (
             <div className="articles-list-grid">
               {articles.map((article) => (
-                <div key={article.id} className="article-list-card">
+                <div key={article.id || article.slug} className="article-list-card">
                   {article.image && (
                     <Link to={`/articles/${article.slug}`} className="article-list-image">
-                      <img src={`https://winchenqaz.com${article.image}`} alt={cleanPhone(article.title)} width="400" height="250" loading="lazy" />
+                      <img src={article.image.startsWith('http') ? article.image : article.image} alt={cleanPhone(article.title)} width="400" height="250" loading="lazy" />
                       {article.category && (
                         <span className="article-badge-main">{article.category}</span>
                       )}
