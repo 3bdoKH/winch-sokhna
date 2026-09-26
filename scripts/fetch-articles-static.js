@@ -175,6 +175,7 @@ function relatedLinksFor(article) {
   if (/جلالة/i.test(text)) linkMap.set('/winch/ونش-انقاذ-الجلالة', 'ونش طريق الجلالة – مجهز للمنحدرات');
   if (/زعفرانة|غارب|طواحين/i.test(text)) linkMap.set('/winch/ونش-انقاذ-الزعفرانة', 'ونش الزعفرانة – دعم سريع على الطريق الساحلي');
   if (/سويس|أدبية|عتاقة|أربعين|توفيق/i.test(text)) linkMap.set('/winch/ونش-انقاذ-السويس', 'ونش انقاذ السويس – وصول 10-15 دقيقة');
+  if (/سيناء|سدر|زنيمة|رديس|موسى/i.test(text)) linkMap.set('/winch/ونش-انقاذ-راس-سدر', 'ونش جنوب سيناء ورأس سدر – وصول سريع 24 ساعة');
 
   for (const [href, label] of AREA_LINKS.default) {
     if (!linkMap.has(href)) linkMap.set(href, label);
@@ -207,7 +208,10 @@ const GUIDE_SLUGS = new Set([
   'choose-trusted-winch-no-scam',
   'car-stuck-in-sand-recovery',
   'oil-light-on-while-driving',
-  'out-of-fuel-desert-road-guide'
+  'out-of-fuel-desert-road-guide',
+  'ataka-adabiya-industrial-ports-towing-guide',
+  'galala-mountain-wadi-hagoul-highway-safety-towing',
+  'south-sinai-coastal-highway-towing-guide'
 ]);
 
 const SLUG_BLOCKLIST = new Set([
@@ -227,10 +231,10 @@ const INCLUDE_DOORWAY = process.env.INCLUDE_DOORWAY_IN_SITEMAP === '1';
 
 const isBlockedSlug = (slug) => {
   if (!slug || typeof slug !== 'string') return true;
+  if (GUIDE_SLUGS.has(slug)) return false;
   if (/[|:*?"<> %]/.test(slug)) return true;
   const lower = slug.toLowerCase();
   if (SLUG_BLOCKLIST.has(slug) || SLUG_BLOCKLIST.has(lower)) return true;
-  if (/industrial/i.test(slug)) return true;
   return false;
 };
 
@@ -365,7 +369,10 @@ async function run() {
     const title = cleanTitle(rawTitle);
     if (title !== rawTitle) sanitizeStats.titles += 1;
     const { html: bodySanitized, stats: bodyStats } = sanitizeHtml(String(a.content || ''));
-    const bodyHtml = unwrapGoneLinks(bodySanitized);
+    // Strip any previously appended related footer so rebuilds stay idempotent
+    // (reprocessing a snapshot must not stack duplicate footers).
+    const bodyNoFooter = bodySanitized.replace(/\n?<div class="api-related-services">[\s\S]*$/, '').trim();
+    const bodyHtml = unwrapGoneLinks(bodyNoFooter);
     Object.keys(bodyStats).forEach((k) => { sanitizeStats[k] += bodyStats[k]; });
     const bodyPlain = bodyHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     const excerpt = cleanExcerpt(String(a.excerpt || '').trim(), slug, bodyPlain);
@@ -397,6 +404,27 @@ async function run() {
     };
     baseArticle.content = bodyHtml + relatedFooter(baseArticle);
     out.push(baseArticle);
+  }
+
+  // Preserve locally-authored articles (localOnly:true) across rebuilds.
+  // If the remote API / fallback snapshot does not include them, re-attach
+  // them here with a fresh related footer (stripping any stale one first
+  // so footers never stack up on repeated builds).
+  try {
+    if (fs.existsSync(OUT_JSON)) {
+      const prev = JSON.parse(fs.readFileSync(OUT_JSON, 'utf-8'));
+      for (const p of (Array.isArray(prev) ? prev : [])) {
+        if (p && p.localOnly === true && p.slug && !seen.has(p.slug)) {
+          seen.add(p.slug);
+          const stripped = String(p.content || '').replace(/\n?<div class="api-related-services">[\s\S]*$/, '').trim();
+          const merged = { ...p, content: stripped };
+          merged.content = stripped + relatedFooter(merged);
+          out.push(merged);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn(`[fetch-articles-static] Could not preserve local articles: ${e.message}`);
   }
 
   const withFlags = out.map((a) => ({ ...a, sitemapEligible: isSitemapEligible(a) }));

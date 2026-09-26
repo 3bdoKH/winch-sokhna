@@ -77,6 +77,8 @@ async function buildSitemap() {
   const districtDate = fmtDate(new Date(now.getTime() - 24 * 3600 * 1000));
   const roadDate = fmtDate(new Date(now.getTime() - 2 * 24 * 3600 * 1000));
   for (const area of allAreas) {
+    // Skip areas explicitly excluded from sitemap (e.g. pages Google sees as "Page with redirect")
+    if (area.sitemapExclude) continue;
     const slug = slugify(area.slug || area.name);
     if (!slug) continue;
     const isHub = hubSlugs.has(area.slug);

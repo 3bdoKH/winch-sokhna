@@ -1,4 +1,4 @@
-import { customAreaContent as sokhnaSpecifics } from './sokhnaContent.js';
+import { customAreaContent as sokhnaSpecifics, areaAliases } from './sokhnaContent.js';
 import { normalizeArabic } from '../utils/slugify.js';
 
 // Deterministic string hasher to seed unique combinations per area
@@ -149,10 +149,13 @@ export const getAreaCustomData = (areaName, governorateName) => {
   const profile = regionProfiles[regionKey] || regionProfiles["مدينة السويس وأحيائها"];
 
   // Check if there is a manual override in sokhnaContent specifically for this exact area
-  const matchedItem = sokhnaSpecifics[areaName] 
+  const baseAreaName = areaAliases?.[areaName] || areaName;
+  const matchedItem = sokhnaSpecifics[areaName]
+    || sokhnaSpecifics[baseAreaName]
     || (areaName === 'بورتوفيق' ? sokhnaSpecifics['بور توفيق'] : null)
     || (areaName === 'الزعفرانه' ? sokhnaSpecifics['الزعفرانة'] : null)
-    || Object.entries(sokhnaSpecifics).find(([k]) => normalizeArabic(k) === normalizeArabic(areaName))?.[1];
+    || Object.entries(sokhnaSpecifics).find(([k]) => normalizeArabic(k) === normalizeArabic(areaName))?.[1]
+    || Object.entries(sokhnaSpecifics).find(([k]) => normalizeArabic(k) === normalizeArabic(baseAreaName))?.[1];
 
   if (matchedItem) {
     const item = matchedItem;
@@ -163,6 +166,19 @@ export const getAreaCustomData = (areaName, governorateName) => {
       'الجلالة': '15 إلى 20 دقيقة',
       'جبل الجلالة': '15 إلى 20 دقيقة',
       'هضبة الجلالة': '15 إلى 20 دقيقة',
+      'طريق الجلالة': '15 إلى 20 دقيقة',
+      'طريق جنيفة': '15 إلى 20 دقيقة',
+      'محور 30 يوليو': '15 إلى 20 دقيقة',
+      'أبو زنيمة': '20 إلى 30 دقيقة',
+      'ابو زنيمة': '20 إلى 30 دقيقة',
+      'عيون موسى': '20 إلى 25 دقيقة',
+      'وادي حجول طريق السويس': '20 إلى 30 دقيقة',
+      'وادي حجول': '20 إلى 30 دقيقة',
+      'عجرود': '10 إلى 15 دقيقة',
+      'طابا': '45 إلى 60 دقيقة',
+      'ابورديس': '20 إلى 30 دقيقة',
+      'أبو رديس': '20 إلى 30 دقيقة',
+      'العريش': '20 إلى 30 دقيقة',
     };
     const honestTime = timeOverrides[areaName] || profile.responseTime;
     // Per-area road tips: coastal-night vs mountain vs port-urban vs urban hub
@@ -170,9 +186,18 @@ export const getAreaCustomData = (areaName, governorateName) => {
       'الزعفرانة': 'قف تماما على كتف الطريق الأيمن بعيدا عن الحارة السريعة، شغل الفلاشر، وأرسل Live Location عبر الواتساب مع أقرب علامة لطواحين الهواء على طريق السخنة-الزعفرانة، وابتعد عن السيارة جهة البحر حتى وصول الدعم.',
       'الزعفرانه': 'قف تماما على كتف الطريق الأيمن بعيدا عن الحارة السريعة، شغل الفلاشر، وأرسل Live Location عبر الواتساب مع أقرب علامة لطواحين الهواء على طريق السخنة-الزعفرانة، وابتعد عن السيارة جهة البحر حتى وصول الدعم.',
       'الجلالة': 'استخدم فرامل اليد مع وضع غيار الأمان لتثبيت السيارة على المنحدرات، وتجنب الوقوف في المنحنيات الضيقة، ولا تحاول النزول مشيا على المرتفعات — انتظر ونش الجلالة المجهز بكابلات ثقيلة.',
+      'طريق الجلالة': 'استخدم فرامل اليد مع وضع غيار الأمان لتثبيت السيارة على المنحدرات وتجنب الوقوف في المنحنيات الضيقة، وانتظر ونش الجلالة المجهز بكابلات ثقيلة.',
       'بور توفيق': 'توقف قرب بوابات الميناء أو الكورنيش في مكان لا يعطل حركة الشاحنات، وأبلغنا برقم البوابة الأقرب واتجاه الكورنيش لتوجيه ونش بور توفيق من أسرع مسار.',
       'بورتوفيق': 'توقف قرب بوابات الميناء أو الكورنيش في مكان لا يعطل حركة الشاحنات، وأبلغنا برقم البوابة الأقرب واتجاه الكورنيش لتوجيه ونش بور توفيق من أسرع مسار.',
       'السويس': 'توقف في أقصى اليمين داخل أحياء الكورنيش أو الأربعين أو فيصل، وأشعل الفلاشر وضع مثلث التحذير، وأرسل اسم الشارع وأقرب ميدان لتوجيه ونش السويس.',
+      'عتاقة': 'ابتعد بالسيارة عن مسار الشاحنات ومداخل مصانع الحديد والإسمنت، وشغل إشارات الانتظار الرباعية لتأمين نفسك من النقل الثقيل.',
+      'الأدبية': 'توقف في مكان آمن على كتف الطريق قرب بوابات الميناء ولا تعطل حركة المقطورات، وأبلغنا برقم أقرب بوابة أمنية.',
+      'عجرود': 'توقف بأمان على جانب الطريق قبل بوابات الكمين بمسافة كافية وضع مثلث التحذير، لتجنب تعطيل مسارات التفتيش الأمني.',
+      'وادي حجول طريق السويس': 'لا تضغط بنزين بقوة إذا غرزت العجلات في الرمل لتجنب غوص السيارة أكثر، ثبت مقود القيادة وشارك موقعك عبر واتساب.',
+      'عيون موسى': 'الزم الجانب الأيمن بعيداً عن مسار الشاحنات القادمة من النفق، لا تفتح غطاء الردياتير وهو ساخن، وشارك موقعك بالقرب من استراحات عيون موسى.',
+      'أبو زنيمة': 'توقف خارج مسار حركة شاحنات الجبس والمحاجر على الطريق الساحلي، شغل إشارات الطوارئ، وشارك موقعك المباشر مع أقرب نقطة تفريغ أو كافتيريا بدوية.',
+      'ابورديس': 'توقف في أقصى يمين الطريق الساحلي بعيداً عن مسارات شاحنات الوقود والمعدات البترولية، وشغل الفلاشر وشارك موقعك المباشر مع أقرب نقطة إسعاف أو كمين.',
+      'العريش': 'توقف على حارة الأمان على الطريق الدولي الساحلي، وأشعل أضواء الانتظار وضع مثلث الخطر، وشارك موقعك عبر واتساب بالقرب من مدخل العريش أو المعالم المعروفة.',
     };
     const roadTip = areaRoadTips[areaName] || profile.roadAdvice;
     // Always generate base FAQs dynamically to guarantee the exact areaName appears
@@ -213,7 +238,15 @@ export const getAreaCustomData = (areaName, governorateName) => {
   const generatedIntro = introPhrasings[introIdx](areaName, regionKey, profile);
   const generatedWhyUs = whyUsPhrasings[whyUsIdx](areaName, profile);
   const generatedHeroSubtitle = subtitleTemplates[subIdx](areaName, profile);
-  const generatedMetaDescription = metaDescriptionTemplates[metaIdx](areaName, regionKey, profile);
+  let generatedMetaDescription = metaDescriptionTemplates[metaIdx](areaName, regionKey, profile);
+  if (generatedMetaDescription.length > 158) {
+    generatedMetaDescription = `ونش انقاذ ${areaName} 24 ساعة 01143433875 - أسرع سطحات هيدروليكية لإنقاذ وسحب السيارات في ${areaName} مع خصم فوري 50% وتأمين كامل.`;
+    if (generatedMetaDescription.length > 158) {
+      generatedMetaDescription = `ونش انقاذ ${areaName} 24 ساعة 01143433875 - أسرع ونش سيارات وسطحات هيدروليكية لسحب وإنقاذ السيارات بخصم 50% ووصول سريع.`;
+    }
+  } else if (generatedMetaDescription.length < 145) {
+    generatedMetaDescription = `ونش انقاذ ${areaName} 24 ساعة 01143433875 - أسرع سطحات هيدروليكية لإنقاذ وسحب السيارات في ${areaName} و${regionKey} بخصم 50% وتأمين شامل.`;
+  }
 
   // Dynamic FAQs explicitly branded with the area name
   const generatedFaqs = [
